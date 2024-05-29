@@ -3,7 +3,7 @@ from aiogram.types import CallbackQuery, Message, InlineKeyboardMarkup, InlineKe
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
 from services.test_service import check_test_answer
-from services.db   import mongo
+from services.db import mongo
 
 
 class TestStates(StatesGroup):
@@ -48,7 +48,8 @@ class TestStates(StatesGroup):
 
 async def test_welcome(callback: CallbackQuery):
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="Старт", callback_data="start_test")]
+        [InlineKeyboardButton(text="Старт", callback_data="start_test")],
+        [InlineKeyboardButton(text="Отмена", callback_data="cancel_test")]
     ])
     await callback.message.answer(
         "Для определения вашего уровня владения польским языком необходимо ответить на 36 вопросов. Уровень будет определен от A1 до B2.",
@@ -70,14 +71,17 @@ async def ask_next_question(message: Message, state: FSMContext):
     
     if current_question < len(questions):
         question = questions[current_question]
+        keyboard = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text=option, callback_data=f"answer_{question['_id']}_{option}")]
+            for option in question.get('options', [])
+        ] + [
+            [InlineKeyboardButton(text="Отмена", callback_data="cancel_test")]
+        ])
+        
         if 'options' in question:
-            keyboard = InlineKeyboardMarkup(inline_keyboard=[
-                [InlineKeyboardButton(text=option, callback_data=f"answer_{question['_id']}_{option}")]
-                for option in question['options']
-            ])
             sent_message = await message.answer(question['question'], reply_markup=keyboard)
         else:
-            sent_message = await message.answer(f"{question['question']} (пожалуйста, напишите ваш ответ)")
+            sent_message = await message.answer(f"{question['question']} (пожалуйста, напишите ваш ответ)", reply_markup=keyboard)
 
         await state.update_data(last_message_id=sent_message.message_id)
         await state.set_state(TestStates.__dict__[f'Q{current_question + 1}'])
@@ -140,6 +144,11 @@ async def show_result(message: Message, state: FSMContext):
     await state.clear()
 
 
+async def cancel_test(callback: CallbackQuery, state: FSMContext):
+    await state.clear()
+    await return_to_main_menu(callback)
+
+
 async def return_to_main_menu(callback: CallbackQuery):
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="Проверка уровня языка", callback_data="test")],
@@ -152,6 +161,7 @@ async def return_to_main_menu(callback: CallbackQuery):
 async def register_test_handlers(dp: Dispatcher):
     dp.callback_query.register(test_welcome, lambda c: c.data == "test")
     dp.callback_query.register(start_test, lambda c: c.data == "start_test")
+    dp.callback_query.register(cancel_test, lambda c: c.data == "cancel_test")
     dp.callback_query.register(handle_test_answer, lambda c: c.data.startswith("answer_"))
     questions = await mongo.language_level.find().to_list(length=None)
     for i in range(1, 37):

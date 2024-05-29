@@ -8,9 +8,11 @@ import tempfile
 from pydub import AudioSegment
 from pydub.utils import which
 
+
 # Set paths for ffmpeg and ffprobe
-AudioSegment.converter = which("ffmpeg")
-AudioSegment.ffprobe = which("ffprobe")
+AudioSegment.converter = "~/bin/ffmpeg"
+AudioSegment.ffprobe = "~/bin/ffprobe"
+
 
 class InterviewStates(StatesGroup):
     WELCOME = State()
