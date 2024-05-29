@@ -6,14 +6,7 @@ from services.openai_service import client, questions, evaluate_answers
 import os
 import tempfile
 from pydub import AudioSegment
-from pydub.utils import which
-
-
-# Set paths for ffmpeg and ffprobe
-AudioSegment.converter = "/bin/ffmpeg"
-AudioSegment.ffprobe = "/bin/ffprobe"
-
-
+import speech_recognition as sr
 
 class InterviewStates(StatesGroup):
     WELCOME = State()
@@ -69,11 +62,12 @@ async def handle_user_answer(message: types.Message, state: FSMContext):
             wav_path = audio_path.replace(".ogg", ".wav")
             audio.export(wav_path, format="wav")
 
-            # Transcribe voice message to text using OpenAI Whisper
-            audio_file = open(wav_path, "rb")
-            transcript = await client.audio.transcriptions.create(file=audio_file, model="whisper-1")
+            # Use speech_recognition to transcribe the WAV file
+            recognizer = sr.Recognizer()
+            with sr.AudioFile(wav_path) as source:
+                audio_data = recognizer.record(source)  # Read the entire audio file
+                user_answer = recognizer.recognize_google(audio_data, language="pl-PL")
 
-            user_answer = transcript.text
         except Exception as e:
             print(f"Error: {e}")
             await message.answer("Произошла ошибка при обработке голосового сообщения. Попробуйте снова или используйте текстовый ответ.")
