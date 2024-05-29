@@ -10,8 +10,10 @@ from pydub.utils import which
 
 
 # Set paths for ffmpeg and ffprobe
-AudioSegment.converter = "/usr/local/bin/ffmpeg"
-AudioSegment.ffprobe = "/usr/local/bin/ffprobe"
+
+AudioSegment.converter = "/home/apps/workspace/bin/ffmpeg"
+AudioSegment.ffprobe = "/home/apps/workspace/bin/ffprobe"
+
 
 
 
