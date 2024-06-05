@@ -5,21 +5,22 @@ client = AsyncOpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
 # Сценарий собеседования
 questions = [
-    "Почему вы хотите получить Карту Поляка?",
-    "Расскажите о вашей семье и их польских корнях.",
-    "Как вы поддерживаете польские традиции?",
-    "Какие польские праздники вы знаете и как их отмечаете?",
-    "Почему для вас важна польская культура?",
-    "Что вы знаете о польской истории?",
-    "Какие известные польские деятели вам известны и почему?",
-    "Какие польские блюда вы готовите или пробовали?",
-    "Вы говорите по-польски? Как вы изучали язык?",
-    "Какие польские книги или фильмы вам известны?",
-    "Как вы планируете использовать Карту Поляка в будущем?",
-    "Есть ли у вас родственники или друзья в Польше? Как вы с ними поддерживаете связь?",
-    "Какие места в Польше вы хотели бы посетить и почему?",
-    "Как вы участвуете в польской общине в вашей стране?",
-    "Какие польские народные обычаи и традиции вы знаете и практикуете?"
+    "Dlaczego Pani/Panu jest potrzebna Karta Polaka?",
+    # "Proszę opowiedzieć o swojej rodzinie i polskich korzeniach?",
+    "Jakie tradycje obchodzą Państwo na Boż Narodzenie?",
+    "Kto jest autorem książki 'Pan Tadeusz'?",
+    # "Jakie polskie święta Pani/Pan zna? Jak je Pani/Pan obchodzi?",
+    # "Co znaczy pojęcie „Narodowość” dla Pani? Proszę uzasadnić swoją wypowiedź?",
+    # "Co Pani/Pan zna o historii Polski?",
+    "Proszę nazwać pełną datę bitwy pod Grunwaldem",
+    # "W którym roku stolica została przeniesiona z Krakowa do Warszawy? Kto był królem podczas tego wydarzenia?",
+    # "Proszę wymienić polskich noblistów oraz powiedzieć dlaczego i w jakiej dziedzinie otrzymali Nagrodę Nobla?",
+    # "Jakie polskie dania tradycyjne Pani/Pan zna? Proszę opisać przepis zupy „Żurek”?",
+    # "Jak długo i gdzie uczył(a) się Pan/Pani języka polskiego?",
+    # "Jakie zna Pani/Pan polskie filmy i książki? Proszę opowiedzieć o filmie „Katyń”?",
+    # "Czy ma Pani/Pan przyjaciół czy znajomych w Polsce?",
+    # "Jakie miasta czy miejsca Pani/Pan już zwiedzał(a)? Czy planuje zwiedzić w przyszłości?",
+    # "Kto napisał utwór „Ogniem i mieczem?"
 ]
 
 async def ask_question(question: str) -> str:
