@@ -31,13 +31,14 @@ async def start_interview(callback: CallbackQuery, state: FSMContext):
 
 async def ask_next_question(message: types.Message, state: FSMContext):
     data = await state.get_data()
-    current_question = data['current_question']
+    current_question = data.get('current_question', 0)  # Default to 0 if key is missing
     if current_question < len(questions):
         question = questions[current_question]
         await state.set_state(InterviewStates.WAIT_ANSWER)
         await message.answer(question)
     else:
         await show_report(message, state)
+
 
 async def handle_user_answer(message: types.Message, state: FSMContext):
     data = await state.get_data()
