@@ -98,18 +98,15 @@ async def show_report(message: types.Message, state: FSMContext):
 
     # Form full report
     report = f"""
-*📄 Ваш отчет о собеседовании:*
-*🏅 Общий балл:* {total_score} из {len(scores) * 10}
-*📊 Средний балл:* {average_score:.2f}
+<b>📄 Ваш отчет о собеседовании:</b>
+<b>🏅 Общий балл:</b> {total_score} из {len(scores) * 10}
+<b>📊 Средний балл:</b> {average_score:.2f}
 
-*💡 Рекомендация:* {'Вы хорошо подготовлены к собеседованию.' if average_score >= 7 else 'Вам стоит лучше подготовиться к собеседованию.'}
+<b>💡 Рекомендация:</b> {'Вы хорошо подготовлены к собеседованию.' if average_score >= 7 else 'Вам стоит лучше подготовиться к собеседованию.'}
 
-*🔍 Подробная оценка ваших ответов:*
+<b>🔍 Подробная оценка ваших ответов:</b>
 {evaluation}
     """
-
-    # Escape MarkdownV2 special characters
-    report = report.replace('_', '\\_').replace('*', '\\*').replace('[', '\\[').replace(']', '\\]').replace('(', '\\(').replace(')', '\\)').replace('~', '\\~').replace('`', '\\`').replace('>', '\\>').replace('#', '\\#').replace('+', '\\+').replace('-', '\\-').replace('=', '\\=').replace('|', '\\|').replace('{', '\\{').replace('}', '\\}').replace('.', '\\.').replace('!', '\\!')
 
     # Split report into multiple messages if it exceeds Telegram's message length limit
     MAX_MESSAGE_LENGTH = 4096
@@ -117,7 +114,7 @@ async def show_report(message: types.Message, state: FSMContext):
 
     # Send each part of the report as a separate message
     for part in messages:
-        await message.answer(part, parse_mode="MarkdownV2")
+        await message.answer(part, parse_mode="HTML")
 
     # Button to return to main menu
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
