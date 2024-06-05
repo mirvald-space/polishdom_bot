@@ -7,7 +7,7 @@ client = AsyncOpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 questions = [
     "Dlaczego Pani/Panu jest potrzebna Karta Polaka?",
     # "Proszę opowiedzieć o swojej rodzinie i polskich korzeniach?",
-    "Jakie tradycje obchodzą Państwo na Boż Narodzenie?",
+    "Jakie tradycje obchodzą Państwo na Boże Narodzenie?",
     "Kto jest autorem książki 'Pan Tadeusz'?",
     # "Jakie polskie święta Pani/Pan zna? Jak je Pani/Pan obchodzi?",
     # "Co znaczy pojęcie „Narodowość” dla Pani? Proszę uzasadnić swoją wypowiedź?",
