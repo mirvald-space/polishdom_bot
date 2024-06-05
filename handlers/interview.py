@@ -37,7 +37,9 @@ async def ask_next_question(message: types.Message, state: FSMContext):
         await state.set_state(InterviewStates.WAIT_ANSWER)
         await message.answer(question)
     else:
+        await message.answer("Вы ответили на все вопросы. Подождите немного, пока бот обработает ваши ответы и составит подробный отчет. Это займет всего несколько секунд. ⏳")
         await show_report(message, state)
+
 
 
 async def handle_user_answer(message: types.Message, state: FSMContext):
