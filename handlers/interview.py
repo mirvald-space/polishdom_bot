@@ -2,11 +2,12 @@ from aiogram import Dispatcher, types
 from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
-from services.openai_service import client, questions, evaluate_answers
+from services.interview_service import client, questions, evaluate_answers
 import os
 import tempfile
 from pydub import AudioSegment
 import speech_recognition as sr
+import random
 
 class InterviewStates(StatesGroup):
     WELCOME = State()
@@ -15,13 +16,15 @@ class InterviewStates(StatesGroup):
     SHOW_REPORT = State()
 
 async def interview_welcome(callback: CallbackQuery, state: FSMContext):
-    await state.update_data(current_question=0, questions_and_answers=[])
+    random.shuffle(questions)
+    selected_questions = questions[:10]  # Select up to 10 questions randomly
+    await state.update_data(current_question=0, questions_and_answers=[], selected_questions=selected_questions)
     welcome_message = (
-        "Вы будете отвечать на 15 вопросов. Пожалуйста, отвечайте на вопросы на польском языке, так как собеседование будет проводиться на этом языке.\n\n"
+        "Вы будете отвечать на 10 вопросов. Пожалуйста, отвечайте на вопросы на польском языке, так как собеседование будет проводиться на этом языке.\n\n"
         "Важно: вы можете отвечать на вопросы как письменно, так и голосом. Главное, отвечать на польском. Если вы отвечаете голосом, постарайтесь говорить четко и разборчиво, чтобы ваш ответ мог быть нормально оценен."
     )
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="Начать собеседование", callback_data="start_interview")]
+        [InlineKeyboardButton(text="🏁 Начать собеседование", callback_data="start_interview")]
     ])
     await callback.message.answer(welcome_message, reply_markup=keyboard)
     await state.set_state(InterviewStates.WELCOME)
@@ -32,8 +35,10 @@ async def start_interview(callback: CallbackQuery, state: FSMContext):
 async def ask_next_question(message: types.Message, state: FSMContext):
     data = await state.get_data()
     current_question = data.get('current_question', 0)  # Default to 0 if key is missing
-    if current_question < len(questions):
-        question = questions[current_question]
+    selected_questions = data.get('selected_questions', [])
+
+    if current_question < len(selected_questions):
+        question = selected_questions[current_question]
         await state.set_state(InterviewStates.WAIT_ANSWER)
         await message.answer(question)
     else:
@@ -46,7 +51,8 @@ async def handle_user_answer(message: types.Message, state: FSMContext):
     data = await state.get_data()
     current_question = data['current_question']
     questions_and_answers = data['questions_and_answers']
-    question = questions[current_question]
+    selected_questions = data.get('selected_questions', [])
+    question = selected_questions[current_question]
 
     if message.voice:
         # Get voice message
@@ -95,7 +101,7 @@ async def show_report(message: types.Message, state: FSMContext):
     evaluation = await evaluate_answers(questions_and_answers)
     
     # Extract scores and calculate average score
-    scores = [int(line.split("Баллы: ")[1].split("/")[0]) for line in evaluation.split("\n") if "Баллы: " in line]
+    scores = [int(line.split("Баллы: ")[1].split("/")[0]) for line in evaluation.split("\n\n") if "Баллы: " in line]
     total_score = sum(scores)
     average_score = total_score / len(scores) if scores else 0
 

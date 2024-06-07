@@ -58,5 +58,5 @@ async def main():
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
-    print(f"Loaded BOT_TOKEN: {config.BOT_TOKEN}")  # Check the token
+    print(f"Бот запущен: {config.BOT_TOKEN}")  # Check the token
     asyncio.run(main())
