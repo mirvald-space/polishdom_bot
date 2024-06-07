@@ -109,7 +109,7 @@ FACTS_SCHEDULE = {
 }
 
 MOVIES_SCHEDULE = {
-    "day_of_week": "fri",
+    "day_of_week": "fri,sat",
     "hour": 17,
     "minute": 50
 }
