@@ -7,3 +7,4 @@ async def register_handlers(dp: Dispatcher):
     register_start_handlers(dp)
     await register_test_handlers(dp)
     register_interview_handlers(dp)
+    pass
