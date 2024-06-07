@@ -24,7 +24,7 @@ async def main():
 
     # Start the schedulers
     phrases_scheduler.add_job(send_phrases, "cron", day_of_week='mon', hour=13, minute=37, args=[bot], timezone=KYIV_TZ)
-    movies_scheduler.add_job(send_movies, "cron", day_of_week='fri', hour=14, minute=40, args=[bot], timezone=KYIV_TZ)
+    movies_scheduler.add_job(send_movies, "cron", day_of_week='fri', hour=14, minute=50, args=[bot], timezone=KYIV_TZ)
     phrases_scheduler.start()
     movies_scheduler.start()
 
