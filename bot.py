@@ -1,4 +1,5 @@
 import asyncio
+import pytz
 from aiogram import Bot, Dispatcher
 from aiogram.enums import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
@@ -7,6 +8,9 @@ from handlers import register_handlers
 from services.phrases_scheduler_service import phrases_scheduler, send_phrases
 from services.movies_scheduler_service import movies_scheduler, send_movies
 from aiogram.client.bot import DefaultBotProperties
+
+# Timezone for Kyiv
+KYIV_TZ = pytz.timezone('Europe/Kiev')
 
 async def main():
     bot = Bot(
@@ -19,8 +23,8 @@ async def main():
     await register_handlers(dp)
 
     # Start the schedulers
-    phrases_scheduler.add_job(send_phrases, "cron", day_of_week='mon', hour=13, minute=37, args=[bot])
-    movies_scheduler.add_job(send_movies, "cron", day_of_week='fri', hour=14, minute=40, args=[bot])
+    phrases_scheduler.add_job(send_phrases, "cron", day_of_week='mon', hour=13, minute=37, args=[bot], timezone=KYIV_TZ)
+    movies_scheduler.add_job(send_movies, "cron", day_of_week='fri', hour=14, minute=40, args=[bot], timezone=KYIV_TZ)
     phrases_scheduler.start()
     movies_scheduler.start()
 
