@@ -3,10 +3,6 @@ from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardBut
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from services.interview_service import client, questions, evaluate_answers
-import os
-import tempfile
-from pydub import AudioSegment
-import speech_recognition as sr
 import random
 
 class InterviewStates(StatesGroup):
@@ -21,7 +17,7 @@ async def interview_welcome(callback: CallbackQuery, state: FSMContext):
     await state.update_data(current_question=0, questions_and_answers=[], selected_questions=selected_questions)
     welcome_message = (
         "Вы будете отвечать на 10 вопросов. Пожалуйста, отвечайте на вопросы на польском языке, так как собеседование будет проводиться на этом языке.\n\n"
-        "Важно: вы можете отвечать на вопросы как письменно, так и голосом. Главное, отвечать на польском. Если вы отвечаете голосом, постарайтесь говорить четко и разборчиво, чтобы ваш ответ мог быть нормально оценен."
+        "Важно: вы можете отвечать на вопросы письменно. Главное, отвечать на польском."
     )
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="🏁 Начать собеседование", callback_data="start_interview")]
@@ -45,44 +41,19 @@ async def ask_next_question(message: types.Message, state: FSMContext):
         await message.answer("Вы ответили на все вопросы. Подождите немного, пока бот обработает ваши ответы и составит подробный отчет. Это займет всего несколько секунд. ⏳")
         await show_report(message, state)
 
-
-
 async def handle_user_answer(message: types.Message, state: FSMContext):
     data = await state.get_data()
-    current_question = data['current_question']
-    questions_and_answers = data['questions_and_answers']
+    current_question = data.get('current_question')
+    questions_and_answers = data.get('questions_and_answers', [])
     selected_questions = data.get('selected_questions', [])
+
+    if not selected_questions or current_question >= len(selected_questions):
+        await message.answer("Ошибка в процессе собеседования. Пожалуйста, начните заново.")
+        await state.clear()
+        return
+
     question = selected_questions[current_question]
-
-    if message.voice:
-        # Get voice message
-        file_id = message.voice.file_id
-        file = await message.bot.get_file(file_id)
-        file_path = file.file_path
-
-        # Download voice message
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".ogg") as temp_file:
-            await message.bot.download_file(file_path, temp_file.name)
-            audio_path = temp_file.name
-
-        try:
-            # Convert OGG to WAV using pydub
-            audio = AudioSegment.from_file(audio_path, format="ogg")
-            wav_path = audio_path.replace(".ogg", ".wav")
-            audio.export(wav_path, format="wav")
-
-            # Use speech_recognition to transcribe the WAV file
-            recognizer = sr.Recognizer()
-            with sr.AudioFile(wav_path) as source:
-                audio_data = recognizer.record(source)  # Read the entire audio file
-                user_answer = recognizer.recognize_google(audio_data, language="pl-PL")
-
-        except Exception as e:
-            print(f"Error: {e}")
-            await message.answer("Произошла ошибка при обработке голосового сообщения. Попробуйте снова или используйте текстовый ответ.")
-            return
-    else:
-        user_answer = message.text
+    user_answer = message.text
 
     # Update state
     questions_and_answers.append({"question": question, "answer": user_answer})
@@ -95,7 +66,7 @@ async def handle_user_answer(message: types.Message, state: FSMContext):
 
 async def show_report(message: types.Message, state: FSMContext):
     data = await state.get_data()
-    questions_and_answers = data['questions_and_answers']
+    questions_and_answers = data.get('questions_and_answers', [])
 
     # Evaluate all answers
     evaluation = await evaluate_answers(questions_and_answers)
@@ -131,7 +102,6 @@ async def show_report(message: types.Message, state: FSMContext):
     ])
     await message.answer("Отчет завершен. Вернуться в главное меню:", reply_markup=keyboard)
     await state.clear()
-
 
 async def return_to_main_menu(callback: CallbackQuery, state: FSMContext):
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
