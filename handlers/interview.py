@@ -20,7 +20,8 @@ async def interview_welcome(callback: CallbackQuery, state: FSMContext):
     "Важно: Вы можете использовать любой язык, но настоятельно рекомендуем польский.🇵🇱"
     )
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="🏁 Начать собеседование", callback_data="start_interview")]
+        [InlineKeyboardButton(text="🏁 Начать собеседование", callback_data="start_interview")],
+        [InlineKeyboardButton(text="❌ Отмена", callback_data="cancel_interview")]
     ])
     await callback.message.answer(welcome_message, reply_markup=keyboard)
     await state.set_state(InterviewStates.WELCOME)
@@ -36,7 +37,10 @@ async def ask_next_question(message: types.Message, state: FSMContext):
     if current_question < len(selected_questions):
         question = selected_questions[current_question]
         await state.set_state(InterviewStates.WAIT_ANSWER)
-        await message.answer(question)
+        keyboard = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="Отмена", callback_data="cancel_interview")]
+        ])
+        await message.answer(question, reply_markup=keyboard)
     else:
         await message.answer("Вы ответили на все вопросы. Подождите немного, пока бот обработает ваши ответы и составит подробный отчет. Это займет всего несколько секунд. ⏳")
         await show_report(message, state)
@@ -103,6 +107,10 @@ async def show_report(message: types.Message, state: FSMContext):
     await message.answer("Отчет завершен. Вернуться в главное меню:", reply_markup=keyboard)
     await state.clear()
 
+async def cancel_interview(callback: CallbackQuery, state: FSMContext):
+    await callback.message.answer("Собеседование было отменено. Вы вернулись в главное меню.")
+    await return_to_main_menu(callback, state)
+
 async def return_to_main_menu(callback: CallbackQuery, state: FSMContext):
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="Проверка уровня языка", callback_data="test")],
@@ -116,4 +124,5 @@ def register_interview_handlers(dp: Dispatcher):
     dp.callback_query.register(interview_welcome, lambda c: c.data == "interview")
     dp.callback_query.register(start_interview, lambda c: c.data == "start_interview")
     dp.message.register(handle_user_answer, InterviewStates.WAIT_ANSWER)
+    dp.callback_query.register(cancel_interview, lambda c: c.data == "cancel_interview")
     dp.callback_query.register(return_to_main_menu, lambda c: c.data == "main_menu")
