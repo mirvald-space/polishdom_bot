@@ -168,7 +168,7 @@ PHRASES_SCHEDULE = {
 FACTS_SCHEDULE = {
     "day_of_week": "wed",
     "hour": 10,
-    "minute": 30
+    "minute": 35
 }
 
 MOVIES_SCHEDULE = {
