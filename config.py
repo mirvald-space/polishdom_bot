@@ -14,31 +14,52 @@ CHANNEL_ID = os.getenv('CHANNEL_ID')
 
 # Prompt templates
 PROMPT_TEMPLATE = """
-Every week I want to publish content on the topic of Polish language, the content should include >=5 short facts about Poland with a brief explanation, very critically without unnecessary headlines, exclusively facts, in Polish, also facts should not be related to each other, each fact should be new and interesting. Example:
-1️⃣ Polska graniczy z siedmioma krajami: Niemcami, Czechami, Słowacją, Ukrainą, Białorusią, Litwą i Rosją.
+Co tydzień chcę publikować treści na temat języka polskiego, które będą zawierać co najmniej 5 krótkich faktów o Polsce z krótkim wyjaśnieniem. Treści powinny być bardzo zwięzłe, bez zbędnych nagłówków, wyłącznie fakty, po polsku. Fakty nie mogą być ze sobą powiązane, każdy fakt powinien być nowy, interesujący i unikalny, nie powtarzając przykładów ani wcześniej wygenerowanych faktów. Każdy fakt powinien zaczynać się od nowego akapitu i być oznaczony эмодзи 🔸.
 
-2️⃣ W Polsce znajduje się największa pustynia w Europie – Pustynia Błędowska, która ma powierzchnię około 33 km².
+Przykład faktów:
 
-3️⃣ Wrocław, jedno z największych miast w Polsce, jest znane z licznych mostów i kładek – jest ich tam ponad 120.
+🔸 Polska jest największym producentem jabłek w Europie.
 
-4️⃣ Polska jest jednym z największych producentów bursztynu na świecie; większość bursztynu pochodzi z wybrzeża Morza Bałtyckiego.
+🔸 Najdłuższa rzeka w Polsce to Wisła, ma długość 1047 km.
 
-5️⃣ W Polsce znajduje się Puszcza Białowieska, jeden z ostatnich i największych pierwotnych lasów nizinnych w Europie.
+🔸 W Polsce znajduje się najstarsza kopalnia soli w Wieliczce, która działa od XIII wieku.
+
+🔸 Polska ma jeden z najstarszych uniwersytetów w Europie, Uniwersytet Jagielloński, założony w 1364 roku.
+
+🔸 W Polsce jest ponad 5000 jezior o powierzchni większej niż 1 hektar.
+
+Pamiętaj, aby każdy fakt był nowy, interesujący i unikalny.
+
 
 """
 
 PROMPT_TEMPLATE_PHARASES="""
-Every week I want to publish content on the topic of Polish language, the content should include >=10 short popular conversational phrases in Polish-Russian translation, very critically, without unnecessary headings, exclusively phrases, in Polish and translation in Russian, also phrases should not be related to each other, each phrase should be new and interesting. Example:
-1. Dzień dobry — Добрый день
-2. Proszę — Пожалуйста
-3. Dziękuję — Спасибо
-4. Przepraszam — Извините
-5. Jak się nazywasz? — Как тебя зовут?
-6. Skąd jesteś? — Откуда ты?
-7. Ile to kosztuje? — Сколько это стоит?
-8. Gdzie jest toaleta? — Где находится туалет?
-9. Czy mówisz po angielsku? — Ты говоришь по-английски?
-10. Do widzenia — До свидания
+Co tydzień chcę publikować treści na temat języka polskiego, które będą zawierać co najmniej 10 krótkich popularnych zwrotów z tłumaczeniem na rosyjski. Treści powinny być bardzo zwięzłe, bez zbędnych nagłówków, wyłącznie zwroty, po polsku z tłumaczeniem na rosyjski. Zwroty nie mogą być ze sobą powiązane, każdy zwrot powinien być nowy, interesujący i unikalny, nie powtarzając przykładów ani wcześniej wygenerowanych zwrotów.
+
+Przykład zwrotów:
+
+📌 Jak dojść do najbliższej stacji metra? – Как дойти до ближайшей станции метро?
+
+📌 Czy mogę płacić kartą? – Можно ли заплатить картой?
+
+📌 Poproszę kawę z mlekiem – Кофе с молоком, пожалуйста
+
+📌 Ile kosztuje bilet do Krakowa? – Сколько стоит билет до Кракова?
+
+📌 Przepraszam, gdzie jest przystanek autobusowy? – Извините, где автобусная остановка?
+
+📌 Jakie jest hasło do Wi-Fi? – Какой пароль от Wi-Fi?
+
+📌 Czy macie menu po angielsku? – У вас есть меню на английском?
+
+📌 Czy mogę prosić o rachunek? – Можно счет, пожалуйста?
+
+📌 Czy to miejsce jest wolne? – Это место свободно?
+
+📌 Czy mogę zarezerwować stolik na jutro? – Могу ли я забронировать столик на завтра?
+
+Pamiętaj, aby każdy zwrot był nowy, interesujący i unikalny.
+
 
 """
 
@@ -160,19 +181,19 @@ EMOJIS = ["🎬", "🍿", "🎥", "📽️", "🎞️", "📺", "🎭"]
 
 # Time settings for schedulers
 PHRASES_SCHEDULE = {
-    "day_of_week": "mon,thu",
-    "hour": 9,
-    "minute": 59
+    "day_of_week": "mon,fri",
+    "hour": 10,
+    "minute": 30
 }
 
 FACTS_SCHEDULE = {
-    "day_of_week": "wed",
-    "hour": 10,
-    "minute": 35
+    "day_of_week": "thu",
+    "hour": 22,
+    "minute": 9
 }
 
 MOVIES_SCHEDULE = {
     "day_of_week": "sat",
     "hour": 17,
-    "minute": 50
+    "minute": 30
 }
