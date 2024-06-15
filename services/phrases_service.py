@@ -1,23 +1,32 @@
+import json
 import random
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from aiogram import Bot
-from openai import AsyncOpenAI
+from assistant_api import AssistantsAPI
 import config
 
-client = AsyncOpenAI(api_key=config.OPENAI_API_KEY)
+# Load the assistant configuration
+with open("assistant_config.json") as file:
+    assistant_config = json.load(file)
+
+assistant_id = assistant_config["id"]
+
+# Initialize the AssistantsAPI client
+assistants_api = AssistantsAPI(api_key=config.ASSISTANTS_API_KEY)
 
 async def fetch_content(prompt):
+    instructions = "You are an expert in the Polish language. Generate 10 brief conversational phrases in Polish."
     messages = [
-        {"role": "system", "content": "You are an expert in the Polish language."},
+        {"role": "system", "content": instructions},
         {"role": "user", "content": prompt}
     ]
-    completion = await client.chat.completions.create(
+    response = await assistants_api.call_assistant(
         model=config.GPT_MODEL,
         messages=messages,
         max_tokens=config.MAX_TOKENS,
         temperature=config.TEMPERATURE,
     )
-    return completion.choices[0].message.content.strip()
+    return response["choices"][0]["message"]["content"].strip()
 
 async def send_phrases(bot: Bot):
     attempts = 0

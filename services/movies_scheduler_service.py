@@ -13,7 +13,7 @@ def fetch_total_pages():
         "api_key": config.TMDB_API_KEY,
         "language": "pl-PL",
         "sort_by": "popularity.desc",
-        "vote_average.gte": 6,
+        "vote_average.gte": 8,
         "page": 1,
     }
     response = requests.get(config.TMDB_API_URL, params=params)
@@ -30,7 +30,7 @@ async def fetch_movies():
         "api_key": config.TMDB_API_KEY,
         "language": "pl-PL",
         "sort_by": "popularity.desc",
-        "vote_average.gte": 6,
+        "vote_average.gte": 8,
         "page": random_page,
     }
     print(f"Fetching movies from page: {random_page}")

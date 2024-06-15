@@ -34,29 +34,17 @@ Pamiętaj, aby każdy fakt był nowy, interesujący i unikalny.
 """
 
 PROMPT_TEMPLATE_PHARASES="""
-Co tydzień chcę publikować treści na temat języka polskiego, które będą zawierać co najmniej 10 krótkich popularnych zwrotów z tłumaczeniem na rosyjski. Treści powinny być bardzo zwięzłe, bez zbędnych nagłówków, wyłącznie zwroty, po polsku z tłumaczeniem na rosyjski. Zwroty nie mogą być ze sobą powiązane, każdy zwrot powinien być nowy, interesujący i unikalny, nie powtarzając przykładów ani wcześniej wygenerowanych zwrotów.
+Co tydzień chcę publikować treści na temat języka polskiego, zawierające dokładnie 5 krótkich popularnych zwrotów z tłumaczeniem na rosyjski. Publikacja powinna być bardzo zwięzła, bez zbędnych nagłówków, wyłącznie zwroty w języku polskim z tłumaczeniem na rosyjski. Zwroty nie mogą być ze sobą powiązane, każdy zwrot powinien być nowy, interesujący i unikalny, nie powtarzając wcześniej użytych przykładów ani zwrotów. 
 
-Przykład zwrotów:
+**W restauracji**
 
-📌 Jak dojść do najbliższej stacji metra? – Как дойти до ближайшей станции метро?
+🍽 **W restauracji**
 
-📌 Czy mogę płacić kartą? – Можно ли заплатить картой?
-
-📌 Poproszę kawę z mlekiem – Кофе с молоком, пожалуйста
-
-📌 Ile kosztuje bilet do Krakowa? – Сколько стоит билет до Кракова?
-
-📌 Przepraszam, gdzie jest przystanek autobusowy? – Извините, где автобусная остановка?
-
-📌 Jakie jest hasło do Wi-Fi? – Какой пароль от Wi-Fi?
-
-📌 Czy macie menu po angielsku? – У вас есть меню на английском?
-
-📌 Czy mogę prosić o rachunek? – Можно счет, пожалуйста?
-
-📌 Czy to miejsce jest wolne? – Это место свободно?
-
-📌 Czy mogę zarezerwować stolik na jutro? – Могу ли я забронировать столик на завтра?
+- **Czy macie stolik przy oknie?** – У вас есть столик у окна?
+- **Czy mogę zarezerwować stolik na dwie osoby?** – Можно забронировать столик на двоих?
+- **Chciałbym zarezerwować stolik na dziś wieczór o siódmej.** – Я бы хотел забронировать столик на сегодняшний вечер в 7 часов.
+- **Czy macie wolne stoliki na dzisiejszy wieczór?** – У вас есть свободные столики на сегодняшний вечер?
+- **Czy możemy usiąść w strefie dla niepalących?** – Мы можем сесть в зону для некурящих?
 
 Pamiętaj, aby każdy zwrot był nowy, interesujący i unikalny.
 
@@ -83,6 +71,7 @@ Format your response as follows:
 """
 
 # Scheduler configuration
+ASSISTANTS_API_KEY='sk-proj-bjqUzGpUgnWuAvLkAkYUT3BlbkFJ0McrC0GJYwalYs29Sof0'
 MAX_ATTEMPTS = 5
 GPT_MODEL = "gpt-4o"
 MAX_TOKENS = 1500
@@ -182,8 +171,8 @@ EMOJIS = ["🎬", "🍿", "🎥", "📽️", "🎞️", "📺", "🎭"]
 # Time settings for schedulers
 PHRASES_SCHEDULE = {
     "day_of_week": "mon,fri",
-    "hour": 10,
-    "minute": 30
+    "hour": 1,
+    "minute": 19
 }
 
 FACTS_SCHEDULE = {

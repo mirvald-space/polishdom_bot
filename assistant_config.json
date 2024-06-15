@@ -1,0 +1,25 @@
+{
+  "id": "asst_UiKLJlJ6ABDsBYv2ojJe4Yum",
+  "object": "assistant",
+  "created_at": 1718316534,
+  "name": "Polish teacher",
+  "description": "An assistant to help with learning the Polish language.",
+  "model": "gpt-4o",
+  "instructions": "This assistant is designed to help you learn the Polish language. You can ask it questions about grammar, vocabulary, or anything else related to the Polish language. You can also ask it to generate example sentences or paragraphs in Polish. If you need help with a specific topic, just let me know!",
+  "tools": [
+    {
+      "type": "code_interpreter"
+    }
+  ],
+  "top_p": 1.0,
+  "temperature": 0.7,
+  "tool_resources": {
+    "code_interpreter": {
+      "file_ids": []
+    }
+  },
+  "metadata": {
+    "project": "polishdom_bot"
+  },
+  "response_format": "auto"
+}
