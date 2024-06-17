@@ -12,7 +12,7 @@ OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 TMDB_API_KEY = os.getenv('TMDB_API_KEY')
 CHANNEL_ID = os.getenv('CHANNEL_ID')
 
-WEBHOOK_URL = 'https://ad46-176-110-103-208.ngrok-free.app/bot_webhook'
+WEBHOOK_URL = os.getenv('WEBHOOK_URL')
 WEBHOOK_PATH = '/bot_webhook'
 WEBAPP_HOST = '0.0.0.0'
 WEBAPP_PORT = 8000
