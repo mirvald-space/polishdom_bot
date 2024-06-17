@@ -2,9 +2,10 @@ import asyncio
 import logging
 import pytz
 import signal
-from aiogram import Bot, Dispatcher
+from aiogram import Bot, Dispatcher, types
 from aiogram.enums import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
+from aiohttp import web
 import config
 from handlers import register_handlers
 from services.facts_service import send_facts
@@ -20,7 +21,25 @@ logger = logging.getLogger(__name__)
 # Timezone for Kyiv
 KYIV_TZ = pytz.timezone('Europe/Kiev')
 
+async def on_startup(app):
+    await bot.set_webhook(config.WEBHOOK_URL)
+
+async def on_shutdown(app):
+    await bot.delete_webhook()
+    await bot.session.close()
+    scheduler.shutdown()
+
+async def handle_update(request):
+    try:
+        update = types.Update(**await request.json())
+        await dp.process_update(update)
+        return web.Response(status=200)
+    except Exception as e:
+        logger.error(f"Failed to process update - {e}")
+        return web.Response(status=500)
+
 async def main():
+    global bot, dp, scheduler
     bot = Bot(
         token=config.BOT_TOKEN,
         default=DefaultBotProperties(parse_mode=ParseMode.HTML)
@@ -32,7 +51,7 @@ async def main():
 
     # Initialize the scheduler
     scheduler = AsyncIOScheduler(timezone=KYIV_TZ)
-    
+
     # Start the schedulers
     scheduler.add_job(
         send_facts, 
@@ -58,27 +77,21 @@ async def main():
         minute=config.MOVIES_SCHEDULE["minute"], 
         args=[bot]
     )
-    
+
     scheduler.start()
     logger.info("Scheduler started. Waiting for jobs to be executed...")
 
-    # Обработка сигналов
-    loop = asyncio.get_event_loop()
-    for sig in (signal.SIGINT, signal.SIGTERM):
-        loop.add_signal_handler(sig, loop.stop)
-    
-    try:
-        await dp.start_polling(bot)
-    except Exception as e:
-        logger.error(f"Failed to fetch updates - {e}")
-        await asyncio.sleep(1)
-    finally:
-        await bot.session.close()
-        scheduler.shutdown()
+    # Setup web application
+    app = web.Application()
+    app.on_startup.append(on_startup)
+    app.on_shutdown.append(on_shutdown)
+    app.router.add_post(f"/{config.WEBHOOK_PATH}", handle_update)
+
+    return app
 
 if __name__ == "__main__":
     logger.info(f"Бот запущен: {config.BOT_TOKEN}")
     try:
-        asyncio.run(main())
+        web.run_app(main(), host="0.0.0.0", port=config.WEBHOOK_PORT)
     except (KeyboardInterrupt, SystemExit):
         logger.info("Bot stopped.")

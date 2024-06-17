@@ -12,6 +12,10 @@ OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 TMDB_API_KEY = os.getenv('TMDB_API_KEY')
 CHANNEL_ID = os.getenv('CHANNEL_ID')
 
+WEBHOOK_URL = os.getenv('WEBHOOK_URL')
+WEBHOOK_PATH = 'bot_webhook'
+WEBHOOK_PORT = 8000
+
 # Prompt templates
 PROMPT_TEMPLATE = """
 Co tydzień chcę publikować treści na temat języka polskiego, które będą zawierać co najmniej 5 krótkich faktów o Polsce z krótkim wyjaśnieniem. Treści powinny być bardzo zwięzłe, bez zbędnych nagłówków, wyłącznie fakty, po polsku. Fakty nie mogą być ze sobą powiązane, każdy fakt powinien być nowy, interesujący i unikalny, nie powtarzając przykładów ani wcześniej wygenerowanych faktów. Każdy fakt powinien zaczynać się od nowego akapitu i być oznaczony эмодзи 🔸.
