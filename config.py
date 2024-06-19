@@ -17,44 +17,6 @@ WEBHOOK_PATH = '/bot_webhook'
 WEBAPP_HOST = '0.0.0.0'
 WEBAPP_PORT = 8000
 
-# Prompt templates
-PROMPT_TEMPLATE = """
-Co tydzień chcę publikować treści na temat języka polskiego, które będą zawierać co najmniej 5 krótkich faktów o Polsce z krótkim wyjaśnieniem. Treści powinny być bardzo zwięzłe, bez zbędnych nagłówków, wyłącznie fakty, po polsku. Fakty nie mogą być ze sobą powiązane, każdy fakt powinien być nowy, interesujący i unikalny, nie powtarzając przykładów ani wcześniej wygenerowanych faktów. Każdy fakt powinien zaczynać się od nowego akapitu i być oznaczony эмодзи 🔸.
-
-Przykład faktów:
-
-🔸 Polska jest największym producentem jabłek w Europie.
-
-🔸 Najdłuższa rzeka w Polsce to Wisła, ma długość 1047 km.
-
-🔸 W Polsce znajduje się najstarsza kopalnia soli w Wieliczce, która działa od XIII wieku.
-
-🔸 Polska ma jeden z najstarszych uniwersytetów w Europie, Uniwersytet Jagielloński, założony w 1364 roku.
-
-🔸 W Polsce jest ponad 5000 jezior o powierzchni większej niż 1 hektar.
-
-Pamiętaj, aby każdy fakt był nowy, interesujący i unikalny.
-
-
-"""
-
-PROMPT_TEMPLATE_PHARASES="""
-Co tydzień chcę publikować treści na temat języka polskiego, zawierające dokładnie 5 krótkich popularnych zwrotów z tłumaczeniem na rosyjski. Publikacja powinna być bardzo zwięzła, bez zbędnych nagłówków, wyłącznie zwroty w języku polskim z tłumaczeniem na rosyjski. Zwroty nie mogą być ze sobą powiązane, każdy zwrot powinien być nowy, interesujący i unikalny, nie powtarzając wcześniej użytych przykładów ani zwrotów. 
-
-**W restauracji**
-
-🍽 **W restauracji**
-
-- **Czy macie stolik przy oknie?** – У вас есть столик у окна?
-- **Czy mogę zarezerwować stolik na dwie osoby?** – Можно забронировать столик на двоих?
-- **Chciałbym zarezerwować stolik na dziś wieczór o siódmej.** – Я бы хотел забронировать столик на сегодняшний вечер в 7 часов.
-- **Czy macie wolne stoliki na dzisiejszy wieczór?** – У вас есть свободные столики на сегодняшний вечер?
-- **Czy możemy usiąść w strefie dla niepalących?** – Мы можем сесть в зону для некурящих?
-
-Pamiętaj, aby każdy zwrot był nowy, interesujący i unikalny.
-
-
-"""
 
 
 INTERVIEW_CONTEXT = """
@@ -76,7 +38,6 @@ Format your response as follows:
 """
 
 # Scheduler configuration
-ASSISTANTS_API_KEY='sk-proj-bjqUzGpUgnWuAvLkAkYUT3BlbkFJ0McrC0GJYwalYs29Sof0'
 MAX_ATTEMPTS = 5
 GPT_MODEL = "gpt-4o"
 MAX_TOKENS = 1500

@@ -1,0 +1,202 @@
+[
+    {
+        "id": 1,
+        "fact": "Polska ma aż 16 miejsc wpisanych na listę światowego dziedzictwa UNESCO."
+    },
+    {
+        "id": 2,
+        "fact": "W Polsce znajduje się najstarsza kopalnia soli na świecie – Kopalnia Soli w Wieliczce."
+    },
+    {
+        "id": 3,
+        "fact": "Warszawa, stolica Polski, została niemal całkowicie zniszczona podczas II wojny światowej i odbudowana po wojnie."
+    },
+    {
+        "id": 4,
+        "fact": "Polska jest największym eksporterem jabłek w Europie."
+    },
+    {
+        "id": 5,
+        "fact": "Polska flaga składa się z dwóch poziomych pasów: białego na górze i czerwonego na dole."
+    },
+    {
+        "id": 6,
+        "fact": "Święto Niepodległości Polski obchodzone jest 11 listopada."
+    },
+    {
+        "id": 7,
+        "fact": "Polski język jest jednym z najtrudniejszych języków na świecie do nauki."
+    },
+    {
+        "id": 8,
+        "fact": "Polska graniczy z siedmioma krajami: Niemcami, Czechami, Słowacją, Ukrainą, Białorusią, Litwą i Rosją."
+    },
+    {
+        "id": 9,
+        "fact": "Najdłuższą rzeką w Polsce jest Wisła, która ma ponad 1000 km długości."
+    },
+    {
+        "id": 10,
+        "fact": "W Polsce znajduje się największy zamek na świecie pod względem powierzchni – Zamek w Malborku."
+    },
+    {
+        "id": 11,
+        "fact": "Polska ma ponad 9300 jezior, w tym największe – Jezioro Śniardwy."
+    },
+    {
+        "id": 12,
+        "fact": "Kraków był stolicą Polski do 1596 roku, zanim Warszawa przejęła tę rolę."
+    },
+    {
+        "id": 13,
+        "fact": "Wrocław jest miastem z największą liczbą mostów w Polsce, nazywane „polską Wenecją”."
+    },
+    {
+        "id": 14,
+        "fact": "Toruń jest znany z produkcji pierników – tradycyjnych polskich ciastek."
+    },
+    {
+        "id": 15,
+        "fact": "Chopin, jeden z najsłynniejszych kompozytorów, pochodził z Polski."
+    },
+    {
+        "id": 16,
+        "fact": "Polska ma jedne z największych zasobów węgla kamiennego na świecie."
+    },
+    {
+        "id": 17,
+        "fact": "W Polsce znajdują się jedne z najpiękniejszych gór Europy – Tatry."
+    },
+    {
+        "id": 18,
+        "fact": "Polska jest jednym z największych producentów bursztynu na świecie."
+    },
+    {
+        "id": 19,
+        "fact": "Gdańsk jest znany jako stolica bursztynu."
+    },
+    {
+        "id": 20,
+        "fact": "Papież Jan Paweł II, jeden z najbardziej szanowanych papieży, pochodził z Polski."
+    },
+    {
+        "id": 21,
+        "fact": "W Polsce znajduje się największy cmentarz wojenny żołnierzy radzieckich poza Rosją – Cmentarz Mauzoleum Żołnierzy Radzieckich w Warszawie."
+    },
+    {
+        "id": 22,
+        "fact": "Białowieża jest jedynym miejscem na świecie, gdzie żyją dzikie żubry."
+    },
+    {
+        "id": 23,
+        "fact": "Polska jest największym eksporterem miodu w Europie."
+    },
+    {
+        "id": 24,
+        "fact": "Najwyższym szczytem w Polsce jest Rysy w Tatrach, który ma wysokość 2499 metrów n.p.m."
+    },
+    {
+        "id": 25,
+        "fact": "W Polsce jest około 5000 km linii kolejowych."
+    },
+    {
+        "id": 26,
+        "fact": "Najstarszy uniwersytet w Polsce to Uniwersytet Jagielloński w Krakowie, założony w 1364 roku."
+    },
+    {
+        "id": 27,
+        "fact": "Polska ma drugą największą populację bocianów w Europie."
+    },
+    {
+        "id": 28,
+        "fact": "Pierogi to tradycyjne polskie danie, które jest popularne na całym świecie."
+    },
+    {
+        "id": 29,
+        "fact": "W Polsce obchodzone jest święto Dzień Kobiet 8 marca, podobnie jak w wielu innych krajach."
+    },
+    {
+        "id": 30,
+        "fact": "Polski alpinista Jerzy Kukuczka był drugim człowiekiem, który zdobył wszystkie 14 ośmiotysięczników."
+    },
+    {
+        "id": 31,
+        "fact": "Polska jest jednym z największych producentów i eksporterów srebra na świecie."
+    },
+    {
+        "id": 32,
+        "fact": "W Polsce znajduje się najstarszy dąb w Europie – Dąb Bartek, który ma ponad 800 lat."
+    },
+    {
+        "id": 33,
+        "fact": "Mazury, znane jako Kraina Tysiąca Jezior, są popularnym miejscem wakacyjnym w Polsce."
+    },
+    {
+        "id": 34,
+        "fact": "Polska jest jednym z największych producentów kiełbasy na świecie."
+    },
+    {
+        "id": 35,
+        "fact": "W Polsce można znaleźć największy ruchomy wydmowy system w Europie – Słowiński Park Narodowy."
+    },
+    {
+        "id": 36,
+        "fact": "W Polsce znajduje się jedno z najstarszych miast w Europie – Gniezno."
+    },
+    {
+        "id": 37,
+        "fact": "Zamek Książ jest trzecim co do wielkości zamkiem w Polsce."
+    },
+    {
+        "id": 38,
+        "fact": "Polska jest jednym z nielicznych krajów, w którym wciąż kultywowane są tradycje kolędowania."
+    },
+    {
+        "id": 39,
+        "fact": "Polska ma jedno z najstarszych muzeów na świecie – Muzeum Książąt Czartoryskich w Krakowie."
+    },
+    {
+        "id": 40,
+        "fact": "Polska była jednym z pierwszych krajów na świecie, który uchwalił konstytucję – Konstytucję 3 maja 1791 roku."
+    },
+    {
+        "id": 41,
+        "fact": "Polska ma jedną z największych sieci dróg rowerowych w Europie."
+    },
+    {
+        "id": 42,
+        "fact": "W Polsce znajduje się największa w Europie fabryka wódki – Polmos w Warszawie."
+    },
+    {
+        "id": 43,
+        "fact": "Łódź jest miastem z jedną z największych ulic handlowych w Europie – ulicą Piotrkowską."
+    },
+    {
+        "id": 44,
+        "fact": "W Polsce znajduje się jedno z najstarszych kin na świecie – Kino Pionier w Szczecinie."
+    },
+    {
+        "id": 45,
+        "fact": "Polska ma jedną z największych flot statków śródlądowych w Europie."
+    },
+    {
+        "id": 46,
+        "fact": "Polska ma jedno z największych muzeów narodowych w Europie – Muzeum Narodowe w Warszawie."
+    },
+    {
+        "id": 47,
+        "fact": "W Polsce znajduje się największy kościół drewniany w Europie – Kościół Pokoju w Świdnicy."
+    },
+    {
+        "id": 48,
+        "fact": "Polska jest jednym z największych producentów ceramiki w Europie."
+    },
+    {
+        "id": 49,
+        "fact": "W Polsce znajduje się jedno z najstarszych planetariów w Europie – Planetarium w Chorzowie."
+    },
+    {
+        "id": 50,
+        "fact": "Polska jest jednym z nielicznych krajów, w którym obchodzone jest święto Trzech Króli jako dzień wolny od pracy."
+    }
+]

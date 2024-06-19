@@ -10,11 +10,19 @@ from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_applicati
 from aiohttp import web
 from config import BOT_TOKEN, WEBHOOK_URL, WEBHOOK_PATH, WEBAPP_HOST, WEBAPP_PORT
 from handlers import register_handlers
-from services.facts_service import send_facts
-from services.phrases_service import send_phrases
+from services.facts import send_facts
 from services.movies_scheduler_service import send_movies
+from services.quiz_sender import send_quiz
+from services.phrases_sender import send_phrases
 import schedule
 from services.db import mongo  # Імпорт MongoDB
+from dotenv import load_dotenv
+
+# Загрузка конфигурации из .env файла
+load_dotenv()
+
+BOT_TOKEN = os.getenv('BOT_TOKEN')
+CHANNEL_ID = os.getenv('CHANNEL_ID')
 
 # Ensure the environment variable TZ is set
 os.environ['TZ'] = 'Europe/Kiev'
@@ -42,8 +50,9 @@ class KyivTimezoneFormatter(logging.Formatter):
 formatter = KyivTimezoneFormatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 handler = logging.StreamHandler()
 handler.setFormatter(formatter)
-logging.basicConfig(level=logging.INFO, handlers=[handler])
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+logger.addHandler(handler)
 
 # Initialize the bot with the token from the config file
 bot = Bot(token=BOT_TOKEN)
@@ -71,25 +80,31 @@ async def on_startup(app):
     # Test MongoDB connection
     try:
         await mongo.client.server_info()
-        logger.info("Successfully connected to MongoDB")
+        logger.info("Успешное подключение к MongoDB")
     except Exception as e:
-        logger.error(f"Failed to connect to MongoDB: {e}")
+        logger.error(f"Не удалось подключиться к MongoDB: {e}")
 
     # Schedule the tasks
-    schedule.every().day.at("10:00").do(run_async_job, send_facts)
-    schedule.every().day.at("12:00").do(run_async_job, send_phrases)
-    schedule.every().day.at("14:00").do(run_async_job, send_movies)
+    schedule.every().day.at("09:00").do(run_async_job, send_quiz, bot, CHANNEL_ID)
+    schedule.every().day.at("17:00").do(run_async_job, send_quiz, bot, CHANNEL_ID)
+    schedule.every().day.at("12:00").do(run_async_job, send_phrases, bot, CHANNEL_ID)
+    schedule.every().wednesday.at("15:00").do(run_async_job, send_facts, bot, CHANNEL_ID)
+    schedule.every().saturday.at("17:00").do(run_async_job, send_movies)
     
-    next_run_facts = kyiv_time(10, 0)
+    next_run_quiz_morning = kyiv_time(9, 0)
+    next_run_quiz_evening = kyiv_time(17, 0)
     next_run_phrases = kyiv_time(12, 0)
-    next_run_movies = kyiv_time(14, 0)
-    logger.info(f"Facts scheduled for 10:00 Kyiv time (next run: {next_run_facts})")
-    logger.info(f"Phrases scheduled for 12:00 Kyiv time (next run: {next_run_phrases})")
-    logger.info(f"Movies scheduled for 14:00 Kyiv time (next run: {next_run_movies})")
+    next_run_facts = kyiv_time(15, 0)
+    next_run_movies = kyiv_time(17, 0)
 
-def run_async_job(coroutine_func):
-    logger.info(f"Starting async job: {coroutine_func.__name__}")
-    asyncio.create_task(coroutine_func(bot))
+    logger.info(f"Викторина 09:00 - 17:00 каждый день (следующий пост: {next_run_quiz_morning} и {next_run_quiz_evening})")
+    logger.info(f"Фразы 12:00 каждый день (следующий запуск: {next_run_phrases})")
+    logger.info(f"Факты 15:00 в среду (следующий запуск: {next_run_facts})")
+    logger.info(f"Фильмы 17:00 в субботу (следующий запуск: {next_run_movies})")
+
+def run_async_job(coroutine_func, *args):
+    logger.info(f"Запуск асинхронного задания: {coroutine_func.__name__}")
+    asyncio.create_task(coroutine_func(*args))
 
 @dp.message(Command("status"))
 async def status_command(message: types.Message):
@@ -111,7 +126,7 @@ async def scheduler():
         await asyncio.sleep(1)
 
 async def main():
-    logger.info(f"Current system time: {datetime.now(KYIV_TZ)}")
+    logger.info(f"Текущее системное время: {datetime.now(KYIV_TZ)}")
 
     app = web.Application()
     app.on_startup.append(on_startup)
@@ -128,7 +143,7 @@ async def main():
     site = web.TCPSite(runner, host=WEBAPP_HOST, port=WEBAPP_PORT)
     await site.start()
 
-    logger.info(f"Starting web application on {WEBAPP_HOST}:{WEBAPP_PORT}")
+    # logger.info(f"Запуск веб-приложения на {WEBAPP_HOST}:{WEBAPP_PORT}")
 
     asyncio.create_task(scheduler())
 
