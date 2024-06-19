@@ -10,7 +10,7 @@ from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_applicati
 from aiohttp import web
 from config import BOT_TOKEN, WEBHOOK_URL, WEBHOOK_PATH, WEBAPP_HOST, WEBAPP_PORT
 from services.facts import send_facts
-from services.movies_scheduler_service import send_movies
+# from services.movies_scheduler_service import send_movies
 from services.quiz_sender import send_quiz
 from services.phrases_sender import send_phrases
 from services.db import mongo  # Імпорт MongoDB
