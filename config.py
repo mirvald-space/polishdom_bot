@@ -128,7 +128,7 @@ INTERVIEW_QUESTIONS = [
 ]
 
 # TMDB API Configuration
-TMDB_API_URL = "https://api.themoviedb.org/3/discover/movie"
+TMDB_API_URL = "https://api.themoviedb.org/3/movie"
 TMDB_IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500"
 
 # List of emojis to use for the header

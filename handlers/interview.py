@@ -120,7 +120,7 @@ async def return_to_main_menu(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
     await state.clear()
 
-def register_interview_handlers(dp: Dispatcher):
+async def register_interview_handlers(dp: Dispatcher):
     dp.callback_query.register(interview_welcome, lambda c: c.data == "interview")
     dp.callback_query.register(start_interview, lambda c: c.data == "start_interview")
     dp.message.register(handle_user_answer, InterviewStates.WAIT_ANSWER)

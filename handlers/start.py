@@ -19,5 +19,5 @@ async def start_command(message: Message):
     ])
     await message.answer("Привет! Я помогу тебе подготовиться к Карте Поляка. Выбери нужный раздел:", reply_markup=keyboard)
 
-def register_start_handlers(dp: Dispatcher):
+async def register_start_handlers(dp: Dispatcher):
     dp.message.register(start_command, Command("start"))
