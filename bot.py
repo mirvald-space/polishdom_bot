@@ -59,7 +59,7 @@ if not logger.hasHandlers():
     logger.addHandler(handler)
 
 # Adding a debug statement to verify logger configuration
-logger.info("Logger configured successfully")
+# logger.info("Журнал успешно настроен")
 
 # Initialize the bot with the token from the config file
 bot = Bot(token=BOT_TOKEN)
@@ -81,10 +81,10 @@ async def schedule_task(func, hour, minute, interval='daily', day_of_week=None, 
             if now > next_run:
                 next_run += timedelta(weeks=1)
         else:
-            raise ValueError("Invalid interval or day_of_week not provided for weekly interval")
+            raise ValueError("Неверный интервал или день_недели не указан для недельного интервала")
 
         sleep_time = (next_run - now).total_seconds()
-        logger.info(f"Scheduled {func.__name__} to run at {next_run}")
+        logger.info(f"Запланировано {func.__name__} запуск на {next_run}")
         await asyncio.sleep(sleep_time)
         await func(*args)
         await asyncio.sleep(1)  # Small sleep to prevent potential tight loop issues
