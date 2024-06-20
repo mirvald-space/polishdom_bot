@@ -110,9 +110,6 @@ async def on_startup(app):
         day_of_week = task['day_of_week']
         asyncio.create_task(schedule_task(func, hour, minute, interval, day_of_week, bot, CHANNEL_ID))
 
-# @dp.message(Command("status"))
-# async def status_command(message: types.Message):
-#     await message.answer("All processes are running!")
 
 async def on_shutdown(app):
     # Delete webhook
