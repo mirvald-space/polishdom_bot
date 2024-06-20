@@ -104,7 +104,7 @@ async def on_startup(app):
     # Schedule tasks
     asyncio.create_task(schedule_task(send_quiz, 11, 20, 'daily', None, bot, CHANNEL_ID))
     asyncio.create_task(schedule_task(send_quiz, 17,46, 'daily', None, bot, CHANNEL_ID))
-    asyncio.create_task(schedule_task(send_phrases, 13, 47, 'daily', None, bot))
+    asyncio.create_task(schedule_task(send_phrases, 13, 47, 'daily', None, bot, CHANNEL_ID))
     asyncio.create_task(schedule_task(send_facts, 15, 48, 'weekly', 2, bot, CHANNEL_ID))  # Wednesday
 
 @dp.message(Command("status"))
