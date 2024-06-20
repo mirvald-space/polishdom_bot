@@ -8,28 +8,22 @@ from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
 from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
 from aiohttp import web
-from config import BOT_TOKEN, WEBHOOK_URL, WEBHOOK_PATH, WEBAPP_HOST, WEBAPP_PORT
+from config import BOT_TOKEN, WEBHOOK_URL, WEBHOOK_PATH, WEBAPP_HOST, WEBAPP_PORT, CHANNEL_ID, TIMEZONE, SCHEDULE_TASKS
 from services.facts import send_facts
 from services.quiz_sender import send_quiz
 from services.phrases_sender import send_phrases
 from services.db import mongo  # Import MongoDB
 from dotenv import load_dotenv
-from handlers.start import register_start_handlers
+from handlers.handlers import register_handlers
 from handlers.test import register_test_handlers
 from handlers.interview import register_interview_handlers
 
-# Load configuration from .env file
-load_dotenv()
-
-BOT_TOKEN = os.getenv('BOT_TOKEN')
-CHANNEL_ID = os.getenv('CHANNEL_ID')
-
 # Ensure the environment variable TZ is set
-os.environ['TZ'] = 'Europe/Kiev'
+os.environ['TZ'] = TIMEZONE
 time.tzset()
 
 # Timezone for Kyiv
-KYIV_TZ = timezone('Europe/Kiev')
+KYIV_TZ = timezone(TIMEZONE)
 
 # Initialize the logger
 logger = logging.getLogger(__name__)
@@ -90,7 +84,7 @@ async def on_startup(app):
     await bot.set_webhook(WEBHOOK_URL)
 
     # Register handlers
-    await register_start_handlers(dp)
+    await register_handlers(dp)
     await register_test_handlers(dp)
     await register_interview_handlers(dp)
 
@@ -102,14 +96,23 @@ async def on_startup(app):
         logger.error(f"Failed to connect to MongoDB: {e}")
 
     # Schedule tasks
-    asyncio.create_task(schedule_task(send_quiz, 11, 20, 'daily', None, bot, CHANNEL_ID))
-    asyncio.create_task(schedule_task(send_quiz, 17,46, 'daily', None, bot, CHANNEL_ID))
-    asyncio.create_task(schedule_task(send_phrases, 13, 47, 'daily', None, bot, CHANNEL_ID))
-    asyncio.create_task(schedule_task(send_facts, 15, 48, 'weekly', 2, bot, CHANNEL_ID))  # Wednesday
+    task_mapping = {
+        'send_facts': send_facts,
+        'send_quiz': send_quiz,
+        'send_phrases': send_phrases
+    }
 
-@dp.message(Command("status"))
-async def status_command(message: types.Message):
-    await message.answer("All processes are running!")
+    for task in SCHEDULE_TASKS:
+        func = task_mapping[task['func']]
+        hour = task['hour']
+        minute = task['minute']
+        interval = task['interval']
+        day_of_week = task['day_of_week']
+        asyncio.create_task(schedule_task(func, hour, minute, interval, day_of_week, bot, CHANNEL_ID))
+
+# @dp.message(Command("status"))
+# async def status_command(message: types.Message):
+#     await message.answer("All processes are running!")
 
 async def on_shutdown(app):
     # Delete webhook

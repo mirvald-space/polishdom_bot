@@ -44,7 +44,3 @@ async def send_facts(bot: Bot, channel_id: str, facts_file='words/facts.json'):
 
     # Запись обновленного списка отправленных постов
     write_sent_facts(sent_facts)
-
-# Пример использования (необходимо заполнить токеном и ID канала)
-# bot = Bot(token='YOUR_BOT_TOKEN')
-# asyncio.run(send_facts(bot, 'YOUR_CHANNEL_ID'))

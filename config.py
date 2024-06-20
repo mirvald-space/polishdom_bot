@@ -3,6 +3,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+# Timezone configuration
+TIMEZONE = 'Europe/Kiev'
+
 # Environment variables
 BOT_TOKEN = os.getenv('BOT_TOKEN')
 MONGO_URI = os.getenv('MONGO_URI')
@@ -16,7 +19,6 @@ WEBHOOK_URL = os.getenv('WEBHOOK_URL')
 WEBHOOK_PATH = '/bot_webhook'
 WEBAPP_HOST = '0.0.0.0'
 WEBAPP_PORT = 8000
-
 
 
 INTERVIEW_CONTEXT = """
@@ -134,21 +136,14 @@ TMDB_IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500"
 # List of emojis to use for the header
 EMOJIS = ["🎬", "🍿", "🎥", "📽️", "🎞️", "📺", "🎭"]
 
-# Time settings for schedulers
-PHRASES_SCHEDULE = {
-    "day_of_week": "mon,fri",
-    "hour": 1,
-    "minute": 19
-}
-
-FACTS_SCHEDULE = {
-    "day_of_week": "thu",
-    "hour": 22,
-    "minute": 9
-}
-
-MOVIES_SCHEDULE = {
-    "day_of_week": "sat",
-    "hour": 17,
-    "minute": 30
-}
+# Schedule configuration
+SCHEDULE_TASKS = [
+    {'func': 'send_quiz', 'hour': 11, 'minute': 20,
+        'interval': 'daily', 'day_of_week': None},
+    {'func': 'send_quiz', 'hour': 17, 'minute': 46,
+        'interval': 'daily', 'day_of_week': None},
+    {'func': 'send_phrases', 'hour': 13, 'minute': 47,
+        'interval': 'daily', 'day_of_week': None},
+    {'func': 'send_facts', 'hour': 15, 'minute': 48,
+        'interval': 'weekly', 'day_of_week': 2}  # Wednesday
+]
