@@ -138,7 +138,7 @@ EMOJIS = ["🎬", "🍿", "🎥", "📽️", "🎞️", "📺", "🎭"]
 
 # Schedule configuration
 SCHEDULE_TASKS = [
-    {'func': 'send_quiz', 'hour': 11, 'minute': 20,
+    {'func': 'send_quiz', 'hour': 11, 'minute': 55,
         'interval': 'daily', 'day_of_week': None},
     {'func': 'send_quiz', 'hour': 17, 'minute': 46,
         'interval': 'daily', 'day_of_week': None},

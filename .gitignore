@@ -4,4 +4,4 @@ add_questions.py
 myenv
 sent_facts.json
 sent_posts.json
-sent_questions.json
+# sent_questions.json
