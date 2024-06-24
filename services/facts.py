@@ -1,22 +1,27 @@
 import json
-from aiogram import Bot
 import asyncio
-import os
+from aiogram import Bot
+from motor.motor_asyncio import AsyncIOMotorClient
+from config import MONGO_URI, MONGO_DB_NAME
 
-# Файл для хранения ID отправленных постов
-SENT_FACTS_FILE = 'sent_facts.json'
+# Коллекция для хранения ID отправленных постов
+COLLECTION_NAME = 'sent-facts-id'
+
+# Подключение к базе данных
+client = AsyncIOMotorClient(MONGO_URI)
+db = client[MONGO_DB_NAME]
+collection = db[COLLECTION_NAME]
 
 # Функция для чтения отправленных постов
-def read_sent_facts():
-    if os.path.exists(SENT_FACTS_FILE):
-        with open(SENT_FACTS_FILE, 'r', encoding='utf-8') as f:
-            return json.load(f)
-    return []
+async def read_sent_facts():
+    sent_facts = []
+    async for document in collection.find({}, {'_id': 0, 'id': 1}):
+        sent_facts.append(document['id'])
+    return sent_facts
 
 # Функция для записи отправленных постов
-def write_sent_facts(sent_facts):
-    with open(SENT_FACTS_FILE, 'w', encoding='utf-8') as f:
-        json.dump(sent_facts, f)
+async def write_sent_fact(fact_id):
+    await collection.insert_one({'id': fact_id})
 
 async def send_facts(bot: Bot, channel_id: str, facts_file='words/facts.json'):
     # Чтение данных из файла facts.json
@@ -24,7 +29,7 @@ async def send_facts(bot: Bot, channel_id: str, facts_file='words/facts.json'):
         facts_data = json.load(f)
 
     # Чтение отправленных постов
-    sent_facts = read_sent_facts()
+    sent_facts = await read_sent_facts()
 
     # Отфильтруем уже отправленные посты
     new_facts_data = [data for data in facts_data if data['id'] not in sent_facts]
@@ -37,10 +42,7 @@ async def send_facts(bot: Bot, channel_id: str, facts_file='words/facts.json'):
     for data in limited_facts_data:
         message += f"• {data['fact']}\n\n"
         # Добавим ID поста в список отправленных
-        sent_facts.append(data['id'])
+        await write_sent_fact(data['id'])
 
     if message:
         await bot.send_message(chat_id=channel_id, text=message, parse_mode='HTML')
-
-    # Запись обновленного списка отправленных постов
-    write_sent_facts(sent_facts)

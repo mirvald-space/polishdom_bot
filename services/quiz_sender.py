@@ -1,22 +1,27 @@
 import json
-from aiogram import Bot
 import asyncio
-import os
+from aiogram import Bot
+from motor.motor_asyncio import AsyncIOMotorClient
+from config import MONGO_URI, MONGO_DB_NAME
 
-# Файл для хранения ID отправленных вопросов
-SENT_QUESTIONS_FILE = 'sent_questions.json'
+# Коллекция для хранения ID отправленных вопросов
+COLLECTION_NAME = 'sent-quiz-id'
+
+# Подключение к базе данных
+client = AsyncIOMotorClient(MONGO_URI)
+db = client[MONGO_DB_NAME]
+collection = db[COLLECTION_NAME]
 
 # Функция для чтения отправленных вопросов
-def read_sent_questions():
-    if os.path.exists(SENT_QUESTIONS_FILE):
-        with open(SENT_QUESTIONS_FILE, 'r', encoding='utf-8') as f:
-            return json.load(f)
-    return []
+async def read_sent_questions():
+    sent_questions = []
+    async for document in collection.find({}, {'_id': 0, 'id': 1}):
+        sent_questions.append(document['id'])
+    return sent_questions
 
 # Функция для записи отправленных вопросов
-def write_sent_questions(sent_questions):
-    with open(SENT_QUESTIONS_FILE, 'w', encoding='utf-8') as f:
-        json.dump(sent_questions, f)
+async def write_sent_question(question_id):
+    await collection.insert_one({'id': question_id})
 
 async def send_quiz(bot: Bot, channel_id: str, quiz_file='words/quiz.json'):
     # Чтение данных из файла quiz.json
@@ -24,7 +29,7 @@ async def send_quiz(bot: Bot, channel_id: str, quiz_file='words/quiz.json'):
         quizzes = json.load(f)
 
     # Чтение отправленных вопросов
-    sent_questions = read_sent_questions()
+    sent_questions = await read_sent_questions()
 
     # Отфильтруем уже отправленные вопросы
     new_quizzes = [quiz for quiz in quizzes if quiz['id'] not in sent_questions]
@@ -47,8 +52,5 @@ async def send_quiz(bot: Bot, channel_id: str, quiz_file='words/quiz.json'):
         )
         
         # Добавим ID вопроса в список отправленных
-        sent_questions.append(quiz['id'])
+        await write_sent_question(quiz['id'])
         await asyncio.sleep(5)  # Задержка между отправками викторин
-
-    # Запись обновленного списка отправленных вопросов
-    write_sent_questions(sent_questions)

@@ -1,22 +1,27 @@
 import json
-from aiogram import Bot
 import asyncio
-import os
+from aiogram import Bot
+from motor.motor_asyncio import AsyncIOMotorClient
+from config import MONGO_URI, MONGO_DB_NAME
 
-# Файл для хранения ID отправленных постов
-SENT_POSTS_FILE = 'sent_posts.json'
+# Коллекция для хранения ID отправленных постов
+COLLECTION_NAME = 'sent-phrases-id'
+
+# Подключение к базе данных
+client = AsyncIOMotorClient(MONGO_URI)
+db = client[MONGO_DB_NAME]
+collection = db[COLLECTION_NAME]
 
 # Функция для чтения отправленных постов
-def read_sent_posts():
-    if os.path.exists(SENT_POSTS_FILE):
-        with open(SENT_POSTS_FILE, 'r', encoding='utf-8') as f:
-            return json.load(f)
-    return []
+async def read_sent_posts():
+    sent_posts = []
+    async for document in collection.find({}, {'_id': 0, 'id': 1}):
+        sent_posts.append(document['id'])
+    return sent_posts
 
 # Функция для записи отправленных постов
-def write_sent_posts(sent_posts):
-    with open(SENT_POSTS_FILE, 'w', encoding='utf-8') as f:
-        json.dump(sent_posts, f)
+async def write_sent_post(post_id):
+    await collection.insert_one({'id': post_id})
 
 async def send_phrases(bot: Bot, channel_id: str, phrases_file='words/phrases.json'):
     # Чтение данных из файла phrases.json
@@ -24,7 +29,7 @@ async def send_phrases(bot: Bot, channel_id: str, phrases_file='words/phrases.js
         phrases_data = json.load(f)
 
     # Чтение отправленных постов
-    sent_posts = read_sent_posts()
+    sent_posts = await read_sent_posts()
 
     # Отфильтруем уже отправленные посты
     new_phrases_data = [data for data in phrases_data if data['id'] not in sent_posts]
@@ -43,8 +48,5 @@ async def send_phrases(bot: Bot, channel_id: str, phrases_file='words/phrases.js
         await bot.send_message(chat_id=channel_id, text=message, parse_mode='HTML')
 
         # Добавим ID поста в список отправленных
-        sent_posts.append(data['id'])
+        await write_sent_post(data['id'])
         await asyncio.sleep(5)  # Задержка между отправками постов, если их больше одного
-
-    # Запись обновленного списка отправленных постов
-    write_sent_posts(sent_posts)
