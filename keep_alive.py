@@ -11,6 +11,7 @@ async def keep_alive(webhook_url):
     base_url = webhook_url.rsplit('/', 1)[0]
     ping_url = f"{base_url}/ping"
     logger.info(f"Keep-alive function started with webhook URL: {webhook_url}")
+    logger.info(f"Derived ping URL: {ping_url}")
     while True:
         logger.info("Attempting keep-alive request...")
         try:
