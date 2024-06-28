@@ -123,13 +123,13 @@ async def main():
         while True:
             await asyncio.sleep(3600)  # Sleep for an hour
     except asyncio.CancelledError:
-        logger.info("Основная задача отменена")
-        print("Основная задача отменена")
+        logger.info("Main task cancelled")
+        print("Main task cancelled")
     finally:
         logger.info("Shutting down...")
         print("Shutting down...")
         await runner.cleanup()
 
 if __name__ == "__main__":
-    print("Запуск скрипта bot.py...")
+    print("Starting bot.py script...")
     asyncio.run(main())
