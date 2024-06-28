@@ -2,3 +2,4 @@ __pycache__
 .env
 add_questions.py
 myenv
+.vscode
