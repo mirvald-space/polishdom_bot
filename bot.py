@@ -54,8 +54,7 @@ async def on_startup(app):
         if all(key in task for key in ['func', 'hour', 'minute', 'interval']):
             task_name = task['func']
             task_time = f"{task['hour']:02}:{task['minute']:02}"
-            logger.info(f"Scheduled {task_name} to run at {task_time} with interval 
-                        {task['interval']}")
+            logger.info(f"Scheduled {task_name} to run at {task_time} with interval {task['interval']}")
         else:
             logger.warning("Task is missing required keys.")
 
