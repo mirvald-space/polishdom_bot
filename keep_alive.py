@@ -1,10 +1,7 @@
 import asyncio
-import logging
 
 from aiohttp import ClientSession
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+from loguru import logger
 
 
 async def keep_alive(webhook_url):

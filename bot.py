@@ -1,19 +1,16 @@
 import asyncio
-import logging
 import os
-import time
-from datetime import datetime, timedelta
+from datetime import datetime
 
-from aiogram import Bot, Dispatcher, types
-from aiogram.filters import Command
+from aiogram import Bot, Dispatcher
 from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
-from aiohttp import ClientSession, web
+from aiohttp import web
 from dotenv import load_dotenv
-from pytz import timezone, utc
+from loguru import logger
+from pytz import timezone
 
 from config import (
     BOT_TOKEN,
-    CHANNEL_ID,
     SCHEDULE_TASKS,
     TIMEZONE,
     WEBAPP_HOST,
@@ -33,8 +30,10 @@ from services.quiz_sender import send_quiz
 # Ensure the environment variables are loaded
 load_dotenv()
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+# Set up logging with loguru for console output only
+logger.remove()  # Remove default handler
+logger.add(lambda msg: print(msg, end=""),
+           format="{time} {level} {message}", level="DEBUG")
 
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
@@ -44,48 +43,45 @@ async def register_all_handlers(dp):
     await register_handlers(dp)
     await register_interview_handlers(dp)
     await register_test_handlers(dp)
-    print("Зарегистрированные манипуляторы.")
+    logger.info("Handlers registered.")
 
 
 async def on_startup(app):
-
     await bot.set_webhook(WEBHOOK_URL)
     logger.info("Successfully connected to MongoDB")
-    # print(f"SCHEDULE_TASKS: {SCHEDULE_TASKS}")
+
     for task in SCHEDULE_TASKS:
         if all(key in task for key in ['func', 'hour', 'minute', 'interval']):
             task_name = task['func']
             task_time = f"{task['hour']:02}:{task['minute']:02}"
-            print(f"Scheduled {task_name} to run at {
-                  task_time} with interval {task['interval']}")
+            logger.info(f"Scheduled {task_name} to run at {
+                        task_time} with interval {task['interval']}")
         else:
             logger.warning("Task is missing required keys.")
-            print("Task is missing required keys.")
-    # Start keep_alive task
+
     app['keep_alive_task'] = asyncio.create_task(keep_alive(WEBHOOK_URL))
 
 
 async def on_shutdown(app):
-    print("Running on_shutdown...")
-    # Delete webhook
+    logger.info("Running on_shutdown...")
+
     await bot.delete_webhook()
-    # Stop background tasks
+
     if 'keep_alive_task' in app:
         app['keep_alive_task'].cancel()
         try:
             await app['keep_alive_task']
         except asyncio.CancelledError:
             logger.info("Keep-alive task cancelled")
-            print("Keep-alive task cancelled")
 
 
 async def handle_index(request):
-    print("Handling index request...")
+    logger.info("Handling index request...")
     return web.Response(text="Hello! Everything is working!", content_type='text/html')
 
 
 async def handle_ping(request):
-    print("Обработка запроса ping...")
+    logger.info("Handling ping request...")
     return web.Response(text="pong")
 
 
@@ -110,18 +106,17 @@ async def main():
     site = web.TCPSite(runner, host=WEBAPP_HOST, port=WEBAPP_PORT)
 
     await site.start()
-    print("Бот запущен")
+    logger.info("Bot started")
 
     try:
         while True:
             await asyncio.sleep(3600)  # Sleep for an hour
     except asyncio.CancelledError:
         logger.info("Main task cancelled")
-        print("Main task cancelled")
     finally:
         logger.info("Shutting down...")
-        print("Shutting down...")
         await runner.cleanup()
 
 if __name__ == "__main__":
+    logger.info("Starting bot...")
     asyncio.run(main())
