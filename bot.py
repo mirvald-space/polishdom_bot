@@ -36,30 +36,27 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-print("Setting up the bot...")
-
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 
 
 async def register_all_handlers(dp):
-    print("Registering handlers...")
     await register_handlers(dp)
     await register_interview_handlers(dp)
     await register_test_handlers(dp)
-    print("Handlers registered.")
+    print("Зарегистрированные манипуляторы.")
 
 
 async def on_startup(app):
-    print("Running on_startup...")
+
     await bot.set_webhook(WEBHOOK_URL)
     logger.info("Successfully connected to MongoDB")
-    print(f"SCHEDULE_TASKS: {SCHEDULE_TASKS}")
+    # print(f"SCHEDULE_TASKS: {SCHEDULE_TASKS}")
     for task in SCHEDULE_TASKS:
-        if 'func' in task and 'hour' in task and 'minute' in task and 'interval' in task:
+        if all(key in task for key in ['func', 'hour', 'minute', 'interval']):
             task_name = task['func']
             task_time = f"{task['hour']:02}:{task['minute']:02}"
-            logger.info(f"Запланировано {task_name} работать на {
+            logger.info(f"Scheduled {task_name} to run at {
                         task_time} with interval {task['interval']}")
             print(f"Scheduled {task_name} to run at {
                   task_time} with interval {task['interval']}")
@@ -90,12 +87,11 @@ async def handle_index(request):
 
 
 async def handle_ping(request):
-    print("Handling ping request...")
+    print("Обработка запроса ping...")
     return web.Response(text="pong")
 
 
 async def main():
-    print("Running main function...")
     logger.info(f"Current system time: {datetime.now(timezone(TIMEZONE))}")
 
     app = web.Application()
@@ -116,8 +112,7 @@ async def main():
     site = web.TCPSite(runner, host=WEBAPP_HOST, port=WEBAPP_PORT)
 
     await site.start()
-    logger.info("Bot started")
-    print("Bot started")
+    print("Бот запущен")
 
     try:
         while True:
@@ -131,5 +126,4 @@ async def main():
         await runner.cleanup()
 
 if __name__ == "__main__":
-    print("Starting bot.py script...")
     asyncio.run(main())
