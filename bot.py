@@ -56,7 +56,7 @@ async def on_startup(app):
     logger.info("Successfully connected to MongoDB")
     print(f"SCHEDULE_TASKS: {SCHEDULE_TASKS}")
     for task in SCHEDULE_TASKS:
-        if all(key in task for key in ['func', 'hour', 'minute', 'interval']):
+        if 'func' in task and 'hour' in task and 'minute' in task and 'interval' in task:
             task_name = task['func']
             task_time = f"{task['hour']:02}:{task['minute']:02}"
             logger.info(f"Scheduled {task_name} to run at {
