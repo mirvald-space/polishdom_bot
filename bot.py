@@ -59,7 +59,7 @@ async def on_startup(app):
         if 'func' in task and 'hour' in task and 'minute' in task and 'interval' in task:
             task_name = task['func']
             task_time = f"{task['hour']:02}:{task['minute']:02}"
-            logger.info(f"Scheduled {task_name} to run at {
+            logger.info(f"Запланировано {task_name} работать на {
                         task_time} with interval {task['interval']}")
             print(f"Scheduled {task_name} to run at {
                   task_time} with interval {task['interval']}")
