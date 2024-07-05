@@ -32,20 +32,23 @@ async def delete_invite_message(message: types.Message):
 
 async def start_command(message: Message):
     logging.info("Called start_command")
-    user_id = message.from_user.id
-    username = message.from_user.username
-    if await is_new_user(user_id):
+    user_id = message.from_user.id if message.from_user else None
+    username = message.from_user.username if message.from_user and message.from_user.username else "Unknown"  # Задаем значение по умолчанию, если username = None
+    
+    if user_id and await is_new_user(user_id):
         logging.info(f"New user detected: {username} (ID: {user_id})")
         await add_new_user(user_id, username)
         await message.answer(
             "🎉<b>Добро пожаловать!</b>\nРад видеть вас впервые. Этот бот поможет вам проверить уровень языка и подготовиться к Карте Поляка.\nСледите за новостями в нашем канале <b>@polishdom</b>", 
             parse_mode='HTML'
         )
+    
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="Проверка уровня языка", callback_data="test")],
         [InlineKeyboardButton(text="Подготовка к собеседованию", callback_data="interview")]
     ])
     await message.answer("<b>Привет!👋</b> \n Я помогу проверить твой уровень языка или подготовиться к Карте Поляка.\n\n Выбери нужный раздел:👇", reply_markup=keyboard, parse_mode='HTML')
+
 
 async def status_command(message: types.Message):
     logging.info("Called status_command")
