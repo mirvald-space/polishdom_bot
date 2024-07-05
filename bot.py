@@ -19,7 +19,7 @@ from config import (
     WEBHOOK_PATH,
     WEBHOOK_URL,
 )
-from handlers.handlers import register_handlers
+from handlers.handlers import delete_invite_message, register_handlers
 from handlers.interview import register_interview_handlers
 from handlers.test import register_test_handlers
 from keep_alive import keep_alive
@@ -35,7 +35,7 @@ load_dotenv()
 logger.remove()  # Remove default handler
 logger.add(lambda msg: print(msg, end=""), format="{time} {level} {message}", level="DEBUG")
 
-bot = Bot(token=BOT_TOKEN)
+bot = Bot(token=BOT_TOKEN)  # type: ignore
 dp = Dispatcher()
 
 INTERVALS = {
@@ -50,7 +50,7 @@ async def register_all_handlers(dp):
     logger.info("Handlers registered.")
 
 async def on_startup(app):
-    await bot.set_webhook(WEBHOOK_URL)
+    await bot.set_webhook(WEBHOOK_URL)  # type: ignore
     logger.info("Successfully connected to MongoDB")
     
     for task in SCHEDULE_TASKS:

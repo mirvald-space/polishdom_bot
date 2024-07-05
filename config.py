@@ -139,7 +139,7 @@ EMOJIS = ["🎬", "🍿", "🎥", "📽️", "🎞️", "📺", "🎭"]
 
 # Schedule configuration
 SCHEDULE_TASKS = [
-    {'func': 'send_facts', 'hour': 9, 'minute': 30,
+    {'func': 'send_facts', 'hour': 10, 'minute': 39,
         'interval': 'weekly', 'day_of_week': 1},
     {'func': 'send_phrases', 'hour': 12, 'minute': 30,
         'interval': 'daily', 'day_of_week': None},
