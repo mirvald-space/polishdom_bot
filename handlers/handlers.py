@@ -66,4 +66,4 @@ async def register_handlers(dp: Dispatcher):
     dp.message.register(unknown_command, lambda message: message.text and message.text.startswith('/'))
 
     # Регистрируем обработчик удаления сервисных сообщений последним
-    dp.message.register(delete_invite_message)
+    # dp.message.register(delete_invite_message)
