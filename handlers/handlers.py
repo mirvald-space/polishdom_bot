@@ -34,9 +34,10 @@ async def send_welcome_message(message: Message, user_id: int, username: str):
 
 async def send_main_menu(message: Message):
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="Проверка уровня языка", callback_data="test")],
-        [InlineKeyboardButton(text="Подготовка к собеседованию", callback_data="interview")]
-    ])
+    [InlineKeyboardButton(text="Подтвердить подписку", callback_data="check_subscription"),
+     InlineKeyboardButton(text="📢 Наш канал", url=f"https://t.me/{CHANNEL_ID}")]
+])
+
     await message.answer("<b>Привет!👋</b> \n Я помогу проверить твой уровень языка или подготовиться к Карте Поляка.\n\n Выбери нужный раздел:👇", reply_markup=keyboard, parse_mode='HTML')
 
 async def start_command(message: Message):
@@ -52,7 +53,7 @@ async def start_command(message: Message):
         else:
             keyboard = InlineKeyboardMarkup(inline_keyboard=[
                 [InlineKeyboardButton(text="Подтвердить подписку", callback_data="check_subscription")],
-                [InlineKeyboardButton(text="Ссылка на наш канал", url=f"https://t.me/{CHANNEL_ID}")]
+                [InlineKeyboardButton(text="📢 Наш канал", url=f"https://t.me/{CHANNEL_ID}")]
             ])
             await message.answer("Для доступа к боту необходимо подписаться на наш канал. Пожалуйста, подтвердите подписку.", reply_markup=keyboard, parse_mode='HTML')
 
