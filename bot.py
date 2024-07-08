@@ -19,7 +19,7 @@ from config import (
     WEBHOOK_PATH,
     WEBHOOK_URL,
 )
-from handlers.handlers import delete_invite_message, register_handlers
+from handlers.handlers import register_handlers
 from handlers.interview import register_interview_handlers
 from handlers.test import register_test_handlers
 from keep_alive import keep_alive
