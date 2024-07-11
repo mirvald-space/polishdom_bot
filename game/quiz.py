@@ -58,7 +58,7 @@ class QuizGame:
                 self.game_active = False
                 logger.info("Викторина отключена из-за неактивности.")
                 # Отправляем сообщение в группу об окончании викторины
-                await self.db.bot.send_message(chat_id=self.db.channel_id, text="Викторина выключена по причине неактивности. Чтобы запустить выполните команду /start_quiz")
+                await self.db.bot.send_message(chat_id=self.db.channel_id, text="Викторина отключена из-за неактивности.")
         except asyncio.CancelledError:
             pass
 
@@ -82,8 +82,19 @@ class QuizGame:
             logger.info("Сообщение не является ответом на текущий вопрос.")
             return
 
+        # Проверка на None
+        if message.from_user is None:
+            logger.info("Сообщение не содержит информации о пользователе.")
+            return
+
         user_name = message.from_user.first_name
         user_id = message.from_user.id
+
+        # Проверка на None для текста сообщения
+        if message.text is None:
+            logger.info("Сообщение не содержит текста.")
+            return
+
         answer = message.text.strip()
 
         response = await self.check_answer(user_id, user_name, answer)
@@ -117,7 +128,9 @@ class QuizGame:
 
     async def check_answer(self, user_id, user_name, answer):
         logger.info(f"Проверка ответа: {answer} (Правильный ответ: {self.current_answer})")
-        if self.current_answer.lower() == answer.lower():
+
+        # Проверка на None перед вызовом lower()
+        if self.current_answer and answer and self.current_answer.lower() == answer.lower():
             await self.db.update_quiz_score(user_id, user_name)
             return "Правильно! Следующий вопрос:"
         else:
