@@ -50,8 +50,8 @@ async def send_subscription_prompt(message: Message):
 
 async def send_main_menu(message: Message):
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="Проверить уровень языка", callback_data="check_language_level")],
-        [InlineKeyboardButton(text="Подготовка к Карте Поляка", callback_data="prepare_for_card")]
+        [InlineKeyboardButton(text="Проверить уровень языка", callback_data="test")],
+        [InlineKeyboardButton(text="Подготовка к Карте Поляка", callback_data="interview")]
     ])
     await message.answer("<b>Привет!👋</b>\nЯ помогу проверить твой уровень языка или подготовиться к Карте Поляка.\n\nВыбери нужный раздел:👇", reply_markup=keyboard, parse_mode='HTML')
 
