@@ -19,9 +19,11 @@ from config import (
     WEBHOOK_PATH,
     WEBHOOK_URL,
 )
+from game.quiz import register_quiz_game_handlers
 from handlers.handlers import register_handlers
 from handlers.interview import register_interview_handlers
 from handlers.test import register_test_handlers
+from handlers.unknown import unknown_command
 from keep_alive import keep_alive
 from services.db import mongo  # Import MongoDB
 from services.facts import send_facts
@@ -47,6 +49,8 @@ async def register_all_handlers(dp):
     await register_handlers(dp)
     await register_interview_handlers(dp)
     await register_test_handlers(dp)
+    await register_quiz_game_handlers(dp)
+    dp.message.register(unknown_command, lambda message: message.text and message.text.startswith('/'))  # Регистрируем обработчик неизвестных команд
     logger.info("Handlers registered.")
 
 async def on_startup(app):

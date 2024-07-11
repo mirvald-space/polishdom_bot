@@ -72,11 +72,6 @@ async def status_command(message: types.Message):
     logging.info("Called status_command")
     await message.answer("<b>Все процессы запущены!</b>", parse_mode='HTML')
 
-async def unknown_command(message: types.Message):
-    logging.info("Called unknown_command")
-    if message.text and message.text.startswith('/'):
-        await message.answer("Извините, я не понимаю эту команду. Пожалуйста, используйте /start или /status.")
-
 async def check_subscription_callback(callback_query: CallbackQuery):
     user_id = callback_query.from_user.id
     if await check_subscription(user_id, callback_query.bot):
@@ -89,7 +84,6 @@ async def register_handlers(dp: Dispatcher):
     # Регистрируем обработчики команд
     dp.message.register(start_command, Command(commands=["start"]))
     dp.message.register(status_command, Command(commands=["status"]))
-    dp.message.register(unknown_command, lambda message: message.text and message.text.startswith('/'))
 
     # Регистрируем обработчик коллбэков
     dp.callback_query.register(check_subscription_callback, lambda c: c.data == 'check_subscription')
