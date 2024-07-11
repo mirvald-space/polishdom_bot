@@ -1,9 +1,12 @@
+import random
+
 from aiogram import Dispatcher, types
-from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
-from services.interview_service import client, questions, evaluate_answers
-import random
+from aiogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
+
+from services.interview_service import client, evaluate_answers, questions
+
 
 class InterviewStates(StatesGroup):
     WELCOME = State()
@@ -16,9 +19,10 @@ async def interview_welcome(callback: CallbackQuery, state: FSMContext):
     selected_questions = questions[:10]  # Select up to 10 questions randomly
     await state.update_data(current_question=0, questions_and_answers=[], selected_questions=selected_questions)
     welcome_message = (
-    "Вас ожидает 10 вопросов. Пожалуйста, отвечайте на них на польском языке.\n\n"
-    "Важно: Вы можете использовать любой язык, но настоятельно рекомендуем польский.🇵🇱"
+    "Добро пожаловать!\nВам предстоит ответить на 10 вопросов.\n\nКаждый раз при перезапуске вы получите новый набор из 10 вопросов.\n\n"
+    "Важно: Вы можете использовать любой язык, но настоятельно рекомендуем польский. 🇵🇱"
     )
+
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="🏁 Начать собеседование", callback_data="start_interview")],
         [InlineKeyboardButton(text="❌ Отмена", callback_data="cancel_interview")]
