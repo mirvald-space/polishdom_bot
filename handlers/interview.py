@@ -1,3 +1,4 @@
+import os
 import random
 
 from aiogram import Dispatcher, types
@@ -5,7 +6,8 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 
-from services.interview_service import client, evaluate_answers, questions
+from services.db import mongo  # Import the mongo instance
+from services.interview_service import evaluate_answers, questions
 
 
 class InterviewStates(StatesGroup):
@@ -13,16 +15,16 @@ class InterviewStates(StatesGroup):
     ASK_QUESTION = State()
     WAIT_ANSWER = State()
     SHOW_REPORT = State()
+    ASK_FEEDBACK = State()
 
 async def interview_welcome(callback: CallbackQuery, state: FSMContext):
     random.shuffle(questions)
     selected_questions = questions[:10]  # Select up to 10 questions randomly
     await state.update_data(current_question=0, questions_and_answers=[], selected_questions=selected_questions)
     welcome_message = (
-    "Добро пожаловать!\nВам предстоит ответить на 10 вопросов.\n\nКаждый раз при перезапуске вы получите новый набор из 10 вопросов.\n\n"
-    "Важно: Вы можете использовать любой язык, но настоятельно рекомендуем польский. 🇵🇱"
+        "Добро пожаловать!\nВам предстоит ответить на 10 вопросов.\n\nКаждый раз при перезапуске вы получите новый набор из 10 вопросов.\n\n"
+        "Важно: Вы можете использовать любой язык, но настоятельно рекомендуем польский. 🇵🇱"
     )
-
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="🏁 Начать собеседование", callback_data="start_interview")],
         [InlineKeyboardButton(text="❌ Отмена", callback_data="cancel_interview")]
@@ -35,7 +37,7 @@ async def start_interview(callback: CallbackQuery, state: FSMContext):
 
 async def ask_next_question(message: types.Message, state: FSMContext):
     data = await state.get_data()
-    current_question = data.get('current_question', 0)  # Default to 0 if key is missing
+    current_question = data.get('current_question', 0)
     selected_questions = data.get('selected_questions', [])
 
     if current_question < len(selected_questions):
@@ -104,12 +106,26 @@ async def show_report(message: types.Message, state: FSMContext):
     for part in messages:
         await message.answer(part, parse_mode="HTML")
 
-    # Button to return to main menu
+    await ask_feedback(message, state)
+
+async def ask_feedback(message: types.Message, state: FSMContext):
+    feedback_message = "Пожалуйста, оцените качество функции собеседования от 1 до 5:"
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="Вернуться в главное меню", callback_data="main_menu")]
+        [InlineKeyboardButton(text=str(i), callback_data=f"feedback_{i}") for i in range(1, 6)]
     ])
-    await message.answer("Отчет завершен. Вернуться в главное меню:", reply_markup=keyboard)
-    await state.clear()
+    await message.answer(feedback_message, reply_markup=keyboard)
+    await state.set_state(InterviewStates.ASK_FEEDBACK)
+
+async def handle_feedback(callback: CallbackQuery, state: FSMContext):
+    feedback_rating = int(callback.data.split('_')[1])
+    user_id = callback.from_user.id
+    username = callback.from_user.username
+
+    # Save feedback to database using the mongo instance
+    await mongo.save_interview_evaluation(user_id, username, feedback_rating)
+
+    await callback.message.answer(f"Спасибо за вашу оценку: {feedback_rating}!")
+    await return_to_main_menu(callback, state)
 
 async def cancel_interview(callback: CallbackQuery, state: FSMContext):
     await callback.message.answer("Собеседование было отменено. Вы вернулись в главное меню.")
@@ -130,3 +146,4 @@ async def register_interview_handlers(dp: Dispatcher):
     dp.message.register(handle_user_answer, InterviewStates.WAIT_ANSWER)
     dp.callback_query.register(cancel_interview, lambda c: c.data == "cancel_interview")
     dp.callback_query.register(return_to_main_menu, lambda c: c.data == "main_menu")
+    dp.callback_query.register(handle_feedback, lambda c: c.data.startswith("feedback_"))
