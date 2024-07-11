@@ -58,7 +58,7 @@ class QuizGame:
                 self.game_active = False
                 logger.info("Викторина отключена из-за неактивности.")
                 # Отправляем сообщение в группу об окончании викторины
-                await self.db.bot.send_message(chat_id=self.db.channel_id, text="Викторина отключена из-за неактивности.")
+                await self.db.bot.send_message(chat_id=self.db.channel_id, text="Викторина выключена по причине неактивности. Чтобы запустить выполните команду /start_quiz")
         except asyncio.CancelledError:
             pass
 
