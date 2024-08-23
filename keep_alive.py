@@ -26,4 +26,4 @@ async def keep_alive(webhook_url):
         except Exception as e:
             logger.error(f"Keep-alive request encountered an error: {e}")
         logger.info("Waiting for next keep-alive request...")
-        await asyncio.sleep(40)
+        await asyncio.sleep(3600)
