@@ -1,50 +1,44 @@
 # PolishDom Bot
 
-PolishDom Bot is a multifunctional Telegram bot designed to help users learn the Polish language and prepare for obtaining the Karta Polaka (Polish Card).
+PolishDom Bot is a multifunctional Telegram bot designed to help users learn the Polish language and prepare for obtaining the Karta Polaka (Polish Card). The bot utilizes AI technology to provide an immersive and interactive learning experience.
 
-## Functionality
+## Key Features
 
-1. **Polish Language Level Test**:
+1. **AI-Powered Virtual Consul for Karta Polaka Preparation**:
 
-   - 36-question test
-   - Determines Polish language proficiency from A1 to B2 level
+   - Simulates a real interview experience with an AI-driven virtual Polish consul
+   - Generates dynamic, context-aware questions based on typical Karta Polaka interview topics
+   - Provides instant, detailed feedback on user responses, helping to improve answer quality
+   - Offers personalized advice and tips for better interview performance
 
-2. **Karta Polaka Interview Preparation**:
+2. **Polish Language Level Test**:
 
-   - Simulates an interview with 10 random questions
-   - Evaluates answers and provides a detailed report
+   - 36-question test to determine Polish language proficiency from A1 to B2 level
 
-3. **Polish Language Quiz**:
+3. **Interactive Polish Language Quiz**:
 
-   - Interactive quiz with questions in Polish
-   - Tracks user scores
+   - Engaging quiz with questions in Polish to reinforce language skills
+   - Tracks user scores and progress over time
 
-4. **Polish Facts Sender**:
+4. **Polish Culture and Language Content**:
 
-   - Periodically sends interesting facts about Poland to a linked channel
+   - Sends interesting facts about Poland to a linked channel
+   - Regularly delivers useful Polish phrases with translations
 
-5. **Polish Phrases Sender**:
+5. **Polish Movie Recommendations**:
 
-   - Regularly sends useful Polish phrases with translations
+   - Curates and sends lists of Polish movies to enhance cultural understanding
 
-6. **Movie Recommendations**:
+6. **Progress Tracking**:
+   - Saves user results and progress in a MongoDB database for personalized learning paths
 
-   - Sends curated lists of Polish movies for viewing
-
-7. **Channel Integration**:
-
-   - Requires subscription to a specific Telegram channel for access to bot features
-
-8. **Progress Tracking**:
-   - Saves user results in a MongoDB database
-
-## Requirements
+## Technical Requirements
 
 - Python 3.12+
 - MongoDB
 - Telegram Bot Token
-- OpenAI API key
-- TMDB API key
+- OpenAI API key (for AI-powered virtual consul)
+- TMDB API key (for movie recommendations)
 
 ## Installation
 
@@ -89,16 +83,16 @@ python bot.py
 - `bot.py`: Main bot file
 - `config.py`: Configuration file
 - `handlers/`: Directory with command handlers
-- `services/`: Directory with services (DB, API, etc.)
+- `services/`: Directory with services (DB, API, AI integration, etc.)
 - `words/`: Directory with JSON files for facts, phrases, and quiz questions
 
 ## Development
 
-To add new features or modify existing ones, follow the project structure and use the appropriate modules.
+To add new features or modify existing ones, follow the project structure and use the appropriate modules. The AI-powered virtual consul functionality is primarily handled in the `services/interview_service.py` file.
 
 ## Contributing
 
-If you'd like to contribute to the project, please create a pull request with a description of your changes.
+We welcome contributions to improve the PolishDom Bot! If you'd like to contribute, please create a pull request with a description of your changes.
 
 ## License
 
