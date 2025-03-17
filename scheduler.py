@@ -7,17 +7,17 @@ from ai.grok import get_grok_response, WORD_SYSTEM_PROMPT
 from handlers.words import escape_markdown
 
 async def generate_next_notification_time():
-    """Генерирует следующее время уведомления (с 9:00 до 21:00)"""
+    """Генерирует следующее время уведомления (с 6:00 до 21:00)"""
     now = datetime.now()
     
     # Если сейчас позже 21:00, переходим на следующий день
     if now.hour >= 21:
         now += timedelta(days=1)
-        now = now.replace(hour=9, minute=0, second=0, microsecond=0)
+        now = now.replace(hour=6, minute=0, second=0, microsecond=0)
     
-    # Если сейчас раньше 9:00, устанавливаем время на 9:00
-    elif now.hour < 9:
-        now = now.replace(hour=9, minute=0, second=0, microsecond=0)
+    # Если сейчас раньше 6:00, устанавливаем время на 6:00
+    elif now.hour < 6:
+        now = now.replace(hour=6, minute=0, second=0, microsecond=0)
     
     # Генерируем случайное время в диапазоне от текущего до 21:00
     max_hour = 21
@@ -79,14 +79,20 @@ async def check_notifications(bot):
     while True:
         try:
             current_time = datetime.now()
+            logging.info(f"Checking notifications at {current_time}")
             users = await db.get_users_for_notification(current_time)
+            logging.info(f"Found {len(users)} users for notification")
             
             for user in users:
                 # Выбираем случайную тему из списка тем пользователя
                 topics = user.get("word_topics", [])
+                logging.info(f"User {user['user_id']} has topics: {topics}")
                 if topics:
                     topic = random.choice(topics)
+                    logging.info(f"Selected topic '{topic}' for user {user['user_id']}")
                     await send_daily_word(bot, user["user_id"], topic)
+                else:
+                    logging.warning(f"User {user['user_id']} has no topics")
             
             # Проверяем каждую минуту
             await asyncio.sleep(60)

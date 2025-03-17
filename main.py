@@ -111,6 +111,10 @@ async def on_startup(bot: Bot):
         if not await check_mongo_connection():
             raise ValueError("Failed to connect to MongoDB")
 
+        # Обновляем существующих пользователей
+        await db.update_existing_users()
+        logging.info("Updated existing users")
+
         # Устанавливаем вебхук
         await bot.set_webhook(url=WEBHOOK_URL)
         logger.info(f"Webhook set to URL: {WEBHOOK_URL}")

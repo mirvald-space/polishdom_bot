@@ -19,7 +19,7 @@ class Database:
             "language_level": "A1",
             "learned_words": [],
             "word_topics": [],  # Темы для ежедневных слов
-            "notifications_enabled": True,  # Включены ли уведомления
+            "notifications_enabled": False,  # Включены ли уведомления
             "next_notification": None  # Время следующего уведомления
         }
         await self.db.users.insert_one(user_data)
@@ -78,10 +78,37 @@ class Database:
 
     async def get_users_for_notification(self, current_time: datetime):
         """Получает пользователей, которым нужно отправить уведомление"""
-        return await self.db.users.find({
+        query = {
             "notifications_enabled": True,
             "next_notification": {"$lte": current_time},
             "word_topics": {"$ne": []}
-        }).to_list(length=None)
+        }
+        logging.info(f"Getting users for notification with query: {query}")
+        logging.info(f"Current time: {current_time}")
+        users = await self.db.users.find(query).to_list(length=None)
+        logging.info(f"Found {len(users)} users for notification")
+        return users
+
+    async def enable_notifications(self, user_id: int):
+        """Включает уведомления для пользователя"""
+        await self.db.users.update_one(
+            {"user_id": user_id},
+            {"$set": {"notifications_enabled": True}}
+        )
+
+    async def disable_notifications(self, user_id: int):
+        """Выключает уведомления для пользователя"""
+        await self.db.users.update_one(
+            {"user_id": user_id},
+            {"$set": {"notifications_enabled": False}}
+        )
+
+    async def update_existing_users(self):
+        """Обновляет существующих пользователей, добавляя недостающие поля"""
+        await self.db.users.update_many(
+            {"notifications_enabled": {"$exists": False}},
+            {"$set": {"notifications_enabled": True}}
+        )
+        logging.info("Updated existing users with notifications_enabled field")
 
 db = Database() 
