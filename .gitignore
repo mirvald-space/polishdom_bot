@@ -2,12 +2,9 @@
 __pycache__/
 *.py[cod]
 *$py.class
-.myenv/
-venv/
-ENV/
-
-# Distribution / packaging
+*.so
 .Python
+env/
 build/
 develop-eggs/
 dist/
@@ -19,17 +16,31 @@ lib64/
 parts/
 sdist/
 var/
-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+
+# Virtual Environment
+venv/
+.env
+.venv
+ENV/
 
 # IDE
 .idea/
 .vscode/
 *.swp
 *.swo
-.cursorignore
+
+# Logs
+*.log
+
+# Local development
+.env.local
+.env.*.local
+
+# ngrok
+ngrok.yml
 
 # Environment variables
 .env
