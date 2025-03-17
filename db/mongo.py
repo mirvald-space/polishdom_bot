@@ -103,12 +103,5 @@ class Database:
             {"$set": {"notifications_enabled": False}}
         )
 
-    async def update_existing_users(self):
-        """Обновляет существующих пользователей, добавляя недостающие поля"""
-        await self.db.users.update_many(
-            {"notifications_enabled": {"$exists": False}},
-            {"$set": {"notifications_enabled": True}}
-        )
-        logging.info("Updated existing users with notifications_enabled field")
 
 db = Database() 
