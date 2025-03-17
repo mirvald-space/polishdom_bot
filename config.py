@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     TOKEN: str
     MONGO_URI: str
     MONGODB_DB: str = "polski"
-    GROK_API_KEY: str
+    GROK_API_KEY: str = ""  # Optional, can be empty
     CHANNEL_ID: str  # ID канала для обязательной подписки
     
     # Webhook settings

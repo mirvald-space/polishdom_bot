@@ -3,6 +3,20 @@ import logging
 from config import settings
 
 async def get_grok_response(prompt: str, system_prompt: str = None) -> str:
+    # Check if GROK_API_KEY is provided
+    if not settings.GROK_API_KEY:
+        logging.warning("GROK_API_KEY not provided. Using fallback responses.")
+        
+        # Provide fallback responses based on the system prompt
+        if system_prompt == WORD_SYSTEM_PROMPT:
+            return "słowo|слово|To jest słowo.|Это слово."
+        elif system_prompt == TEST_SYSTEM_PROMPT:
+            return "Ваш уровень: [A2]. Вы показали базовые знания польского языка."
+        elif system_prompt == INTERVIEW_SYSTEM_PROMPT:
+            return "Вы хорошо подготовлены к интервью. Продолжайте практиковаться."
+        else:
+            return "Функция недоступна без API ключа Grok."
+    
     try:
         messages = []
         if system_prompt:

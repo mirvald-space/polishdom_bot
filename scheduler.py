@@ -33,7 +33,7 @@ async def send_daily_word(bot, user_id: int, topic: str):
     try:
         # Получаем уровень пользователя и список изученных слов
         user = await db.get_user(user_id)
-        level = user["language_level"] if user else "A1"
+        level = user.get("language_level", "A1") if user else "A1"
         learned_words = await db.get_learned_words(user_id)
         
         # Генерируем слово с помощью Grok

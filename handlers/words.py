@@ -41,7 +41,7 @@ async def cmd_word(message: Message):
         
         # Получаем уровень пользователя и список изученных слов
         user = await db.get_user(message.from_user.id)
-        level = user["language_level"] if user else "A1"
+        level = user.get("language_level", "A1") if user else "A1"
         learned_words = await db.get_learned_words(message.from_user.id)
         
         # Добавляем тему в список для ежедневных слов
