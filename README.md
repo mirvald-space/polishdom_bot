@@ -120,15 +120,4 @@ We welcome contributions to the project! Please create issues and pull requests.
     "language_level": str,
     "tests_completed": int
 }
-```
-
-### Sessions Collection
-```json
-{
-    "user_id": int,
-    "session_type": str,
-    "questions": list,
-    "answers": list,
-    "timestamp": datetime
-}
 ``` 
