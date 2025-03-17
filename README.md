@@ -110,14 +110,33 @@ We welcome contributions to the project! Please create issues and pull requests.
 - `/interview` - Start Polish Card interview preparation
 - `/test` - Take a language level test
 
-## Database Structure
+## 📊 Database Structure
+
+The project uses MongoDB with the following collection structure:
 
 ### Users Collection
+
+This collection stores user data and their learning preferences.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| user_id | Integer | Telegram user ID |
+| username | String | Telegram username |
+| language_level | String | Current Polish language level (e.g., "A1") |
+| learned_words | Array[String] | List of words the user has learned |
+| word_topics | Array[String] | Topics user is subscribed to for daily words |
+| notifications_enabled | Boolean | Whether user wants to receive notifications |
+| next_notification | DateTime | Scheduled time for next word notification |
+
+Example document:
 ```json
 {
-    "user_id": int,
-    "username": str,
-    "language_level": str,
-    "tests_completed": int
+    "user_id": 123456789,
+    "username": "john_doe",
+    "language_level": "A1",
+    "learned_words": ["kot", "pies", "dom"],
+    "word_topics": ["animals", "family"],
+    "notifications_enabled": true,
+    "next_notification": "2024-03-17T10:00:00Z"
 }
 ``` 
