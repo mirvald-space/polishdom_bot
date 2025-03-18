@@ -47,6 +47,9 @@ async def cmd_word(message: Message):
         # Добавляем тему в список для ежедневных слов
         await db.add_word_topic(message.from_user.id, topic)
         
+        # Включаем уведомления для пользователя
+        await db.enable_notifications(message.from_user.id)
+        
         # Если это первая тема, устанавливаем время следующего уведомления
         topics = await db.get_word_topics(message.from_user.id)
         if len(topics) == 1:
@@ -121,6 +124,7 @@ async def cmd_stop_word(message: Message):
         topics = await db.get_word_topics(message.from_user.id)
         if not topics:
             # Если тем не осталось, отключаем уведомления
+            await db.disable_notifications(message.from_user.id)
             await db.update_next_notification(message.from_user.id, None)
             await message.answer(
                 "✅ Тема удалена. У вас больше нет активных тем для изучения слов.\n"
