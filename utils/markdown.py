@@ -11,6 +11,9 @@ def escape_markdown(text: str) -> str:
     for char in special_chars:
         text = text.replace(char, f'\\{char}')
     
+    # Экранируем ### отдельно
+    text = text.replace('###', '\\#\\#\\#')
+    
     # Восстанавливаем экранированные звездочки и добавляем экранирование для одиночных звездочек
     text = text.replace('§STAR§', '\\*')
     

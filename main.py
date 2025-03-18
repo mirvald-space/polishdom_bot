@@ -74,7 +74,7 @@ dp.include_router(words.router)
 # Список команд бота
 commands = [
     BotCommand(command="start", description="Начать работу с ботом"),
-    BotCommand(command="test", description="Пройти тест уровень языка"),
+    BotCommand(command="test", description="Узнать свой уровень и получить план"),
     BotCommand(command="interview", description="Тренажер интервью на карту поляка"),
     BotCommand(command="word", description="Подписаться на слова по теме"),
     BotCommand(command="stopword", description="Отписаться от слов по теме"),

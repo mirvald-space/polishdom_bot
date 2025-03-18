@@ -46,10 +46,8 @@ INTERVIEW_QUESTIONS = [
     
     # Język polski
     "Czy może się Pan/Pani przedstawić po polsku?",
-    "Jak powie Pan/Pani 'dzień dobry' i 'do widzenia' po polsku?",
     "Proszę wymienić dni tygodnia po polsku.",
     "Jak po polsku nazywają się członkowie rodziny (matka, ojciec, brat, siostra)?",
-    "Jak będzie po polsku 'Kocham Polskę'?",
     
     # Związki osobiste z Polską
     "Proszę opowiedzieć o swoich polskich korzeniach.",
