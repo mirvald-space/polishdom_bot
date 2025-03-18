@@ -10,6 +10,9 @@ import logging
 import random
 from states.interview import InterviewStates
 from utils.markdown import escape_markdown
+from aiogram.types import Voice
+from utils.audio import transcribe_audio
+import os
 
 router = Router()
 router.message.filter(F.chat.type == "private")
@@ -163,11 +166,29 @@ async def cancel_interview(message: Message, state: FSMContext):
             reply_markup=ReplyKeyboardRemove()
         )
 
+
+@router.message(StateFilter(InterviewStates.waiting_answer), F.voice)
+async def handle_voice_message(message: Message, state: FSMContext):
+    file_id = message.voice.file_id
+    file = await message.bot.get_file(file_id)
+    file_path = f"/tmp/{file_id}.ogg"
+    
+    await message.bot.download_file(file.file_path, file_path)
+    await message.answer("🔄 Транскрибирую аудио...")
+    
+    text = await transcribe_audio(file_path)
+    os.remove(file_path)
+    
+    if not text:
+        await message.answer("⚠️ Не удалось распознать аудио.")
+        return
+    
+    await message.answer(f"✅ Распознано: {text}")
+    await process_answer(message, state, text)
+
+
 # Обработчик ответов на вопросы
-# Обработчик ответов на вопросы
-# Обработчик ответов на вопросы
-@router.message(StateFilter(InterviewStates.waiting_answer), ~F.text.startswith("/"), ~F.text.startswith("❌"))
-async def handle_answer(message: Message, state: FSMContext):
+async def process_answer(message: Message, state: FSMContext, answer_text: str):
     # Получаем данные из состояния
     data = await state.get_data()
     question_index = data.get("question_index", 0)
@@ -175,15 +196,10 @@ async def handle_answer(message: Message, state: FSMContext):
     answers = data.get("answers", [])
     interview_questions = data.get("interview_questions", [])
     
-    # Проверка на пустой ответ
-    if not message.text or message.text.strip() == "":
-        await message.answer("Пожалуйста, введите ответ на вопрос.")
-        return
-    
     # Сохраняем текущий вопрос и ответ
     current_question = interview_questions[question_index]
     questions.append(current_question)
-    answers.append(message.text)
+    answers.append(answer_text)
     
     # Переходим к следующему вопросу или завершаем
     next_index = question_index + 1
@@ -199,8 +215,11 @@ async def handle_answer(message: Message, state: FSMContext):
         # Отправляем следующий вопрос
         await message.answer(interview_questions[next_index])
     else:
-        # Все вопросы заданы, создаем анализ
+        # Весь код из handle_answer для обработки завершения
         await message.answer(f"🔄 Интервью завершено! Вы ответили на {len(questions)} вопросов. Анализирую ваши ответы...")
+        
+        # Создаем итоговый анализ - весь код из handle_answer, который идет после этого сообщения
+        # [Скопировать весь остальной код из handle_answer, начиная с summary_prompt]
                 
         # Создаем итоговый анализ
         summary_prompt = (
@@ -263,6 +282,15 @@ async def handle_answer(message: Message, state: FSMContext):
                 reply_markup=ReplyKeyboardRemove()
             )
             await state.clear()
+
+
+@router.message(StateFilter(InterviewStates.waiting_answer), ~F.text.startswith("/"), ~F.text.startswith("❌"))
+async def handle_answer(message: Message, state: FSMContext):
+    if not message.text or message.text.strip() == "":
+        await message.answer("Пожалуйста, введите ответ на вопрос.")
+        return
+    
+    await process_answer(message, state, message.text)
 
 # Обработчик для команд во время интервью
 @router.message(StateFilter(InterviewStates.waiting_answer), F.text.startswith("/"))
