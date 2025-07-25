@@ -47,7 +47,7 @@ else:
     # Локально используем ngrok
     WEBHOOK_HOST = settings.WEBHOOK_HOST.rstrip('/')
     WEBHOOK_PORT = settings.WEBHOOK_PORT
-    WEBHOOK_URL = f"https://{WEBHOOK_HOST}{settings.WEBHOOK_PATH}"
+    WEBHOOK_URL = f"{WEBHOOK_HOST}{settings.WEBHOOK_PATH}"
 
 # Инициализация бота и диспетчера
 bot = Bot(token=settings.TOKEN)
