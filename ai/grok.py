@@ -38,7 +38,7 @@ async def get_grok_response(prompt: str, system_prompt: str = None) -> str:
                 },
                 json={
                     "messages": messages,
-                    "model": "grok-beta",
+                    "model": "grok-4-latest",
                     "stream": False,
                     "temperature": 0
                 }
