@@ -4,7 +4,7 @@ from aiogram.filters import Command, StateFilter
 from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
 from aiogram.fsm.context import FSMContext
 import logging
-from ai.grok import get_grok_response, TEST_SYSTEM_PROMPT
+from ai.openrouter import get_ai_response, TEST_SYSTEM_PROMPT
 from datetime import datetime
 from states.test import TestStates
 from utils.markdown import escape_markdown
@@ -122,7 +122,7 @@ async def determine_level(text):
     )
     
     try:
-        result = await get_grok_response(prompt, TEST_SYSTEM_PROMPT)
+        result = await get_ai_response(prompt, TEST_SYSTEM_PROMPT)
         # Извлекаем уровень из ответа
         level_match = re.search(r'(A[0-2]|B1|B2|C1|C2)', result)
         if level_match:
@@ -164,7 +164,7 @@ async def create_learning_plan(message, state, user_response, level):
     )
     
     try:
-        plan = await get_grok_response(summary_prompt, TEST_SYSTEM_PROMPT)
+        plan = await get_ai_response(summary_prompt, TEST_SYSTEM_PROMPT)
         if not plan:
             raise ValueError("Пустой ответ от API")
             
