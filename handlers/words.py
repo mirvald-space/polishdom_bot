@@ -2,7 +2,7 @@ from aiogram import Router, F
 from aiogram.filters import Command
 from aiogram.types import Message
 from db.mongo import db
-from ai.grok import get_grok_response, WORD_SYSTEM_PROMPT
+from ai.openrouter import get_ai_response, WORD_SYSTEM_PROMPT
 import logging
 from datetime import datetime
 from utils.markdown import escape_markdown
@@ -61,7 +61,7 @@ async def cmd_word(message: Message):
         prompt = f"""Generate a Polish word related to the topic '{topic}' appropriate for {level} level student. 
 The word should NOT be one of these: {', '.join(learned_words)}.
 Provide the translation in Russian language and a simple example of using this word in everyday life."""
-        response = await get_grok_response(prompt, WORD_SYSTEM_PROMPT)
+        response = await get_ai_response(prompt, WORD_SYSTEM_PROMPT)
         
         # Разбираем ответ
         try:

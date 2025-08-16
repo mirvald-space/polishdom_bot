@@ -3,7 +3,7 @@ import logging
 from datetime import datetime, timedelta
 import random
 from db.mongo import db
-from ai.grok import get_grok_response, WORD_SYSTEM_PROMPT
+from ai.openrouter import get_ai_response, WORD_SYSTEM_PROMPT
 from handlers.words import escape_markdown
 
 async def generate_next_notification_time():
@@ -40,7 +40,7 @@ async def send_daily_word(bot, user_id: int, topic: str):
         prompt = f"""Generate a Polish word related to the topic '{topic}' appropriate for {level} level student. 
 The word should NOT be one of these: {', '.join(learned_words)}.
 Provide the translation in Russian language and a simple example of using this word in everyday life."""
-        response = await get_grok_response(prompt, WORD_SYSTEM_PROMPT)
+        response = await get_ai_response(prompt, WORD_SYSTEM_PROMPT)
         
         # Разбираем ответ
         word, translation, example, example_translation = response.strip().split("|")

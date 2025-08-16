@@ -4,7 +4,7 @@ from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, ReplyKey
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from QUESTIONS.INTERVIEW_QUESTIONS import INTERVIEW_QUESTIONS
-from ai.grok import get_grok_response, INTERVIEW_SYSTEM_PROMPT
+from ai.openrouter import get_ai_response, INTERVIEW_SYSTEM_PROMPT
 from datetime import datetime
 import logging
 import random
@@ -247,7 +247,7 @@ async def process_answer(message: Message, state: FSMContext, answer_text: str):
         )
         
         try:
-            summary = await get_grok_response(summary_prompt, INTERVIEW_SYSTEM_PROMPT)
+            summary = await get_ai_response(summary_prompt, INTERVIEW_SYSTEM_PROMPT)
             if not summary:
                 raise ValueError("Пустой ответ от API")
                 
