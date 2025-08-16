@@ -35,8 +35,6 @@ async def cmd_start(message: Message):
         "/start - Начать работу с ботом\n"
          "/interview - Подготовка к интервью\n"
             "/test - Узнать свой уровень и получить план обучения\n"
-            "/word - Подписаться на слова по теме\n"
-            "/stopword - Отписаться от слов по теме\n"
     )
     
     if not is_subscribed:
@@ -44,8 +42,6 @@ async def cmd_start(message: Message):
             "\n⚠️ Для доступа ко всем функциям бота необходимо подписаться на наш канал:\n"
             "• /interview - Подготовка к интервью на карту поляка\n"
             "• /test - Узнать свой уровень и получить план обучения\n"
-            "• /word - Подписаться на слова по теме\n"
-            "• /stopword - Отписаться от слов по теме\n"
         )
         keyboard = get_subscription_keyboard()
         await message.answer(welcome_text, reply_markup=keyboard)
@@ -65,9 +61,7 @@ async def cmd_channel(message: Message):
             "✅ Вы уже подписаны на наш канал! Используйте команды бота:\n\n"
             "/start - Начать работу с ботом\n"
             "/test - Начать тест уровня языка\n"
-            "/interview - Подготовка к интервью\n"
-            "/word - Подписаться на слова по теме\n"
-            "/stopword - Отписаться от слов по теме"
+            "/interview - Подготовка к интервью"
         )
     else:
         # Используем клавиатуру с кнопкой проверки подписки

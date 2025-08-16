@@ -8,9 +8,9 @@ from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
 from aiogram.exceptions import TelegramAPIError
 from config import settings
-from handlers import interview, test, common, words
+from handlers import interview, test, common
 from aiogram.types import BotCommand
-from scheduler import check_notifications
+
 from utils.subscription import SubscriptionCheckMiddleware
 from db.mongo import db
 
@@ -69,15 +69,12 @@ dp.callback_query.middleware(SubscriptionCheckMiddleware())
 dp.include_router(common.router)
 dp.include_router(interview.router)
 dp.include_router(test.router)
-dp.include_router(words.router)
 
 # Список команд бота
 commands = [
     BotCommand(command="start", description="Начать работу с ботом"),
     BotCommand(command="test", description="Узнать свой уровень и получить план"),
     BotCommand(command="interview", description="Тренажер интервью на карту поляка"),
-    BotCommand(command="word", description="Подписаться на слова по теме"),
-    BotCommand(command="stopword", description="Отписаться от слов по теме"),
 ]
 
 async def check_telegram_token():
@@ -130,9 +127,7 @@ async def on_startup(bot: Bot):
         await bot.set_my_commands(commands)
         logger.info("Bot commands registered")
         
-        # Запускаем планировщик уведомлений в отдельной задаче
-        asyncio.create_task(check_notifications(bot))
-        logger.info("Notification scheduler started")
+
     except Exception as e:
         logger.error(f"Startup failed: {e}")
         raise
